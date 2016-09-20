@@ -5,9 +5,14 @@
 
 	<groupId>edu.illinois</groupId>
 	<artifactId>pending</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<version>1.0</version>
-	<name>pending</name>
+    <modules>
+        <module>web</module>
+		<module>util</module>
+		<module>backend</module>
+	</modules>
+    <name>pending</name>
 
 	<prerequisites>
 		<maven>3</maven>
@@ -16,7 +21,7 @@
 	<properties>
 		<vaadin.version>7.7.1</vaadin.version>
 		<vaadin.plugin.version>7.7.1</vaadin.plugin.version>
-		<jetty.plugin.version>9.3.9.v20160517</jetty.plugin.version>
+		<jetty.plugin.version>9.3.11.v20160721</jetty.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -122,6 +127,7 @@
 				<version>${jetty.plugin.version}</version>
 				<configuration>
 					<scanIntervalSeconds>2</scanIntervalSeconds>
+                    <webAppSourceDirectory>${basedir}/util</webAppSourceDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
