@@ -31,7 +31,7 @@ public class MainUI extends HorizontalLayout {
 	}
 	
 	
-	private NavigationMenu menu;
+	private final NavigationMenu menu;
 	
 	public MainUI(BaseUI ui) {
 		this.ui = ui;

@@ -11,7 +11,7 @@ public class WebErrorView extends AbstractWebView implements View {
 	
 	public static final String VIEW_NAME = "Error";
 	
-	Label description;
+	final Label description;
 	
 	public WebErrorView() {
 		setMargin(true);

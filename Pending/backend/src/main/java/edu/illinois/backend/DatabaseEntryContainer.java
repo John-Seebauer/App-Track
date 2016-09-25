@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by John Seebauer (seebaue2) on 9/24/16.
  */
 public class DatabaseEntryContainer<T extends DatabaseEntry> extends IndexedContainer {
-	private Map<String, Method> fieldGetters;
+	private final Map<String, Method> fieldGetters;
 	
 	public DatabaseEntryContainer() {
 		super();

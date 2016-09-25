@@ -13,5 +13,5 @@ public abstract class AbstractWebView extends VerticalLayout implements WebAbstr
 	
 	public void init(UI ui) {
 		this.ui = ui;
-	};
+	}
 }
