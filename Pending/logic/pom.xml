@@ -9,14 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>backend</artifactId>
+    <artifactId>logic</artifactId>
+    <name>logic</name>
     <dependencies>
         <dependency>
             <groupId>edu.illinois</groupId>
-            <artifactId>util</artifactId>
+            <artifactId>backend</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
+    <packaging>jar</packaging>
 
-
+    <build></build>
 </project>

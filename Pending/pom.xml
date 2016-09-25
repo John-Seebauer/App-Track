@@ -11,7 +11,8 @@
         <module>web</module>
 		<module>util</module>
 		<module>backend</module>
-	</modules>
+        <module>logic</module>
+    </modules>
     <name>pending</name>
 
 	<prerequisites>
@@ -127,7 +128,7 @@
 				<version>${jetty.plugin.version}</version>
 				<configuration>
 					<scanIntervalSeconds>2</scanIntervalSeconds>
-                    <webAppSourceDirectory>${basedir}/util</webAppSourceDirectory>
+                    <webAppSourceDirectory>${basedir}/web</webAppSourceDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

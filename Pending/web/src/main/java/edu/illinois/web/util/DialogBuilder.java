@@ -21,7 +21,7 @@ public class DialogBuilder {
 	private final float DEFAULT_WIDTH = 40.0f;
 	private final float DEFAULT_HEIGHT = 50.0f;
 	
-	Consumer<YesNoCancelResult> consumer;
+	private Consumer<YesNoCancelResult> consumer;
 	private AbstractComponent content;
 	
 	private String okText = DEFAULT_ACCEPT_TEXT;
@@ -35,9 +35,10 @@ public class DialogBuilder {
 	private Sizeable.Unit widthUnit;
 	private float height;
 	private Sizeable.Unit heightUnit;
+	private DialogType type;
 	
 	
-	public DialogBuilder(@NotNull UI ui, @NotNull AbstractComponent content) {
+	public DialogBuilder(@NotNull UI ui, @NotNull AbstractComponent content, @NotNull DialogType type) {
 		this.ui = Objects.requireNonNull(ui, "Must provide a parent.");
 		this.content = Objects.requireNonNull(content, "Must provide content for a dialog.");
 		width = DEFAULT_WIDTH;
@@ -146,6 +147,7 @@ public class DialogBuilder {
 			setWidth(width, widthUnits);
 			setHeight(height, heightUnits);
 			setClosable(false);
+			setResizable(false);
 			Panel base = new Panel();
 			VerticalLayout mainLayout = new VerticalLayout();
 			HorizontalLayout bottomBar = new HorizontalLayout();
@@ -167,6 +169,7 @@ public class DialogBuilder {
 				noButton.setWidth(10.0f, Unit.EX);
 				bottomBar.addComponent(noButton);
 				bottomBar.setComponentAlignment(noButton, Alignment.BOTTOM_LEFT);
+				bottomBar.setExpandRatio(noButton, 1);
 			}
 			
 			if (cancelEnabled) {

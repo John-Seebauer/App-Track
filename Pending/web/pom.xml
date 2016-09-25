@@ -23,5 +23,10 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>edu.illinois</groupId>
+            <artifactId>logic</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>
