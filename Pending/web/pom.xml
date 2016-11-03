@@ -28,5 +28,10 @@
             <artifactId>logic</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>edu.illinois</groupId>
+            <artifactId>backend</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>

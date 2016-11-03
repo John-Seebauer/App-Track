@@ -1,8 +1,6 @@
-package edu.illinois.backend;
+package edu.illinois.util;
 
 import com.vaadin.data.util.IndexedContainer;
-import edu.illinois.util.DatabaseEntry;
-import edu.illinois.util.Triple;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

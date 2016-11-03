@@ -7,6 +7,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
+import edu.illinois.backend.WebLoginModel;
+import edu.illinois.logic.LoginModel;
+import edu.illinois.logic.LoginPresenter;
+import edu.illinois.logic.LoginView;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -19,8 +23,26 @@ public class BaseUI extends UI {
 	    setLocale(vaadinRequest.getLocale());
 	    getPage().setTitle("Pending");
 	    addStyleName(ValoTheme.UI_WITH_MENU);
-	    setContent(new MainUI(BaseUI.this));
-	    getNavigator().navigateTo(getNavigator().getState());
+	
+	    WebLoginView loginWindow = new WebLoginView(this);
+	    loginWindow.init(username -> {
+		    this.setContent(new MainUI(BaseUI.this, username));
+		    getNavigator().navigateTo(getNavigator().getState());
+	    });
+	    loginWindow.center();
+	    setSizeFull();
+	    loginWindow.setWidth("70%");
+	    loginWindow.setHeight("70%");
+	    try {
+		    WebLoginModel model = WebLoginModel.class.newInstance();
+		    LoginPresenter<LoginView, LoginModel> presenter = new LoginPresenter<>();
+		    presenter.init(loginWindow, model);
+		    loginWindow.setActionListener(presenter);
+	    } catch (InstantiationException | IllegalAccessException e) {
+		    e.printStackTrace();
+	    }
+		addWindow(loginWindow);
+	    
     }
     
    public static BaseUI get() {

@@ -1,5 +1,7 @@
 package edu.illinois.util;
 
+import java.util.Objects;
+
 /**
  * Created by John Seebauer (seebaue2) on 9/24/16.
  */
@@ -27,4 +29,18 @@ public class Triple<T1, T2, T3> {
 		return arg3;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Triple)) return false;
+		Triple<?, ?, ?> triple = (Triple<?, ?, ?>) o;
+		return Objects.equals(arg1, triple.arg1) &&
+				Objects.equals(arg2, triple.arg2) &&
+				Objects.equals(arg3, triple.arg3);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(arg1, arg2, arg3);
+	}
 }

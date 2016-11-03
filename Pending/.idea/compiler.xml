@@ -32,6 +32,7 @@
     <bytecodeTargetLevel target="1.8">
       <module name="backend" target="1.8" />
       <module name="logic" target="1.8" />
+      <module name="Movie Matcher" target="1.8" />
       <module name="Pending" target="1.8" />
       <module name="util" target="1.8" />
       <module name="util (1)" target="1.8" />

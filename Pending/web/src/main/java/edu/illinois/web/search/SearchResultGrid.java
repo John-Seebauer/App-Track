@@ -4,7 +4,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.Grid;
-import edu.illinois.backend.DatabaseEntryContainer;
+import edu.illinois.util.DatabaseEntryContainer;
 import edu.illinois.util.DatabaseEntry;
 import edu.illinois.util.Triple;
 

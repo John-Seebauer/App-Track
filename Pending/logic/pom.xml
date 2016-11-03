@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>edu.illinois</groupId>
-            <artifactId>backend</artifactId>
+            <artifactId>util</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>

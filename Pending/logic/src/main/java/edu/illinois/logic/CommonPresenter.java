@@ -3,9 +3,14 @@ package edu.illinois.logic;
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
-public abstract class CommonPresenter {
+public abstract class CommonPresenter<V extends CommonView,M extends CommonModel> {
 	
-	public CommonPresenter( CommonView view, CommonModel model) {
+	V view;
+	M model;
+	
+	public void init(V view, M model) {
 		
+		this.view = view;
+		this.model = model;
 	}
 }

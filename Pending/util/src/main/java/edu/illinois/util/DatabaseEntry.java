@@ -1,32 +1,39 @@
 package edu.illinois.util;
 
 import java.io.Serializable;
-import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/24/16.
  */
 public class DatabaseEntry implements Serializable {
-	final String title;
-	final Integer views;
-	final Duration length;
+	private final String database;
+	private Map<Pair<String, Class<?>>, Object> attributes;
 	
-	public DatabaseEntry(String title, Integer views, Duration length) {
+	public DatabaseEntry(String database) {
+		this.database = database;
 		
-		this.title = title;
-		this.views = views;
-		this.length = length;
+		this.attributes = new HashMap();
 	}
 	
-	public String getTitle() {
-		return title;
+	public <T> T getAttribute(String attributeName, Class<T> type) {
+		if(type == null) {
+			throw new NullPointerException("Null class type is invalid.");
+		}
+		Object retrieved = attributes.get(new Pair<>(attributeName, type));
+		if(retrieved == null) {
+			throw  new NullPointerException("No attribute with that name and type exist.");
+		}
+		return type.cast(retrieved);
 	}
 	
-	public Integer getViews() {
-		return views;
+	public <T> void addAttribute(String attributeName, Class<T> type, Object value) {
+		attributes.put(new Pair<>(attributeName, type), value);
 	}
 	
-	public Duration getLength() {
-		return length;
+	public String getDatabase() {
+		return database;
 	}
+	
 }
