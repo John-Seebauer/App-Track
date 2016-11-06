@@ -1,11 +1,13 @@
 package edu.illinois.web;
 
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import edu.illinois.logic.LoginView;
 import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
+import edu.illinois.web.util.YesNoCancelResult;
 
 import java.util.function.Consumer;
 
@@ -22,7 +24,6 @@ public class WebLoginView extends Window implements LoginView{
 		this.ui = ui;
 		
 		setCaption("login");
-		
 	}
 	
 	void init(Consumer<String> displayAfterLogin) {
@@ -30,10 +31,7 @@ public class WebLoginView extends Window implements LoginView{
 		layout.setSizeFull();
 		layout.setMargin(true);
 		layout.setSpacing(true);
-		setModal(false);
-		setClosable(false);
-		setDraggable(false);
-		setResizable(false);
+		
 		HorizontalLayout loginBox = new HorizontalLayout();
 		loginBox.setSizeFull();
 		loginBox.setMargin(true);
@@ -42,6 +40,47 @@ public class WebLoginView extends Window implements LoginView{
 		TextField password = new TextField();
 		Button createNewUser = new Button("New User");
 		createNewUser.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+		createNewUser.addClickListener( clickEvent -> {
+			VerticalLayout loginLayout = new VerticalLayout();
+			loginLayout.setMargin(true);
+			loginLayout.setSpacing(true);
+			loginLayout.setSizeFull();
+			
+			Label nameLabel = new Label("Name");
+			TextField nameField = new TextField();
+			Label usernameLabel = new Label("Username");
+			TextField usernameField = new TextField();
+			Label passwordLabel = new Label("Password");
+			TextField passwordField = new TextField();
+			Label languageLabel = new Label("Language");
+			TextField languageField = new TextField();
+			
+			
+			loginLayout.addComponent(nameLabel);
+			loginLayout.addComponent(nameField);
+			loginLayout.addComponent(usernameLabel);
+			loginLayout.addComponent(usernameField);
+			loginLayout.addComponent(passwordLabel);
+			loginLayout.addComponent(passwordField);
+			loginLayout.addComponent(languageLabel);
+			loginLayout.addComponent(languageField);
+			
+			new DialogBuilder(ui, loginLayout, DialogType.INFO)
+				.showCancel()
+				.resultConsumer( consumer -> {
+					if(YesNoCancelResult.YES.equals(consumer)) {
+						actionListener.addNewUser(nameField.getValue(), usernameField.getValue(),
+							passwordField.getValue(), languageField.getValue());
+						if(actionListener.authenticate(usernameField.getValue(), passwordField.getValue())) {
+							displayAfterLogin.accept(usernameField.getValue());
+							close();
+							showMessage("Unknown user");
+						}
+					}
+				})
+				.display();
+		});
+		
 		
 		Button enterShortcut = new Button("Login");
 		enterShortcut.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -65,6 +104,11 @@ public class WebLoginView extends Window implements LoginView{
 		layout.setDefaultComponentAlignment(Alignment.TOP_LEFT);
 		setContent(layout);
 		setSizeFull();
+		setModal(false);
+		setClosable(false);
+		setDraggable(false);
+		setResizable(false);
+		setWindowMode(WindowMode.NORMAL);
 	}
 	
 	

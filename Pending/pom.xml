@@ -77,11 +77,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.39</version>
 		</dependency>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
-			<version>RELEASE</version>
-		</dependency>
 	</dependencies>
 
 	<build>

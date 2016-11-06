@@ -6,4 +6,5 @@ package edu.illinois.logic;
 public interface LoginModel extends CommonModel {
 	
 	boolean authenticateUser(String username, String password);
+	void addNewUser(String name, String username, String password, String language);
 }

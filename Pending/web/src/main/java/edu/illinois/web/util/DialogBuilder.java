@@ -1,7 +1,9 @@
 package edu.illinois.web.util;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -193,6 +195,8 @@ public class DialogBuilder {
 				}
 			});
 			okButton.setWidth(10.0f, Unit.EX);
+			okButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+			okButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 			bottomBar.addComponent(okButton);
 			bottomBar.setComponentAlignment(okButton, Alignment.BOTTOM_RIGHT);
 			

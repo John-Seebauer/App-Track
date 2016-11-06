@@ -65,9 +65,7 @@ public class MainUI extends HorizontalLayout {
 		menu = new NavigationMenu(menuNavigator);
 		try {
 			createViews(menu);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
+		} catch (IllegalAccessException | InstantiationException e) {
 			e.printStackTrace();
 		}
 		

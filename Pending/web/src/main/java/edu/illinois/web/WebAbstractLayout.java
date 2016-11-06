@@ -29,13 +29,16 @@ public interface WebAbstractLayout extends CommonView, View {
 		}
 		
 		TextArea output = new TextArea();
-		StringBuilder outputText = new StringBuilder( error.getLocalizedMessage());
-		for (StackTraceElement stackTraceElement : error.getStackTrace()) {
-			outputText.append(stackTraceElement.toString()).append("<br>");
-		}
-		output.setData(outputText.toString());
-		output.setIcon(FontAwesome.EXCLAMATION_TRIANGLE);
+		output.setSizeFull();
+		output.setWordwrap(false);
 		
+		StringBuilder outputText = new StringBuilder( error.getLocalizedMessage()).append('\n');
+		for (StackTraceElement stackTraceElement : error.getStackTrace()) {
+			outputText.append(stackTraceElement.toString()).append("\n");
+		}
+		output.setValue(outputText.toString());
+		output.setIcon(FontAwesome.EXCLAMATION_TRIANGLE);
+		output.setEnabled(false);
 		DialogBuilder builder = new DialogBuilder( UI.getCurrent(), output, DialogType.ERROR)
 				.title(parent.getLocalizedMessage())
 				.yesText("OK");

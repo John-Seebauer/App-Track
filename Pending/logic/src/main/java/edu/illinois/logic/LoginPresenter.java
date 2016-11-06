@@ -19,4 +19,9 @@ public class LoginPresenter<V extends LoginView, M extends LoginModel> extends C
 	public boolean authenticate(String username, String password) {
 		return model.authenticateUser(username, password);
 	}
+	
+	@Override
+	public void addNewUser(String name, String username, String password, String language) {
+		model.addNewUser(name, username, password, language);
+	}
 }
