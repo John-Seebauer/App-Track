@@ -1,7 +1,6 @@
 package edu.illinois.backend.search;
 
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import edu.illinois.backend.StorageService;
 import edu.illinois.backend.WebCommonModel;
 import edu.illinois.logic.SearchModel;
 import edu.illinois.util.DatabaseTable;
@@ -13,19 +12,13 @@ import java.sql.SQLException;
  */
 public class WebSearchModel extends WebCommonModel implements SearchModel {
 	
-	private StorageService service;
-	
 	public WebSearchModel() {
 		
 	}
 	
 	@Override
-	public void init() {
-		try {
-			service = StorageService.getInstance();
-		}  catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public String getProperty(String name) {
+		return service.getProperty(name);
 	}
 	
 	@Override

@@ -8,8 +8,8 @@ import java.sql.SQLException;
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
-public class SearchPresenter<V extends SearchView,M extends SearchModel> extends CommonPresenter<V,M>
-	implements SearchView.ActionListener {
+public class SearchPresenter<V extends SearchView, M extends SearchModel> extends CommonPresenter<V, M>
+		implements SearchView.ActionListener {
 	
 	@Override
 	public void init(V view, M model) {
@@ -25,14 +25,9 @@ public class SearchPresenter<V extends SearchView,M extends SearchModel> extends
 	}
 	
 	@Override
-	public SQLContainer requestQuery(String query) {
-		try {
-			System.out.format("Requesting query: %s\n", query);
-			return model.requestQuery(query);
-		} catch (SQLException ex) {
-			view.showError(ex);
-		}
-		return null;
+	public SQLContainer requestQuery(String query) throws SQLException {
+		System.out.format("Requesting query: %s\n", query);
+		return model.requestQuery(query);
 	}
 	
 	@Override
@@ -43,5 +38,10 @@ public class SearchPresenter<V extends SearchView,M extends SearchModel> extends
 			view.showError(ex);
 		}
 		return null;
+	}
+	
+	@Override
+	public String getProperty(String name) {
+		return super.getProperty(name);
 	}
 }

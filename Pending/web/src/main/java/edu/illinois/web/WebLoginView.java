@@ -36,8 +36,8 @@ public class WebLoginView extends Window implements LoginView{
 		loginBox.setSizeFull();
 		loginBox.setMargin(true);
 		loginBox.setSpacing(true);
-		TextField username = new TextField();
-		TextField password = new TextField();
+		TextField username = new TextField("Username");
+		PasswordField password = new PasswordField("Password");
 		Button createNewUser = new Button("New User");
 		createNewUser.addStyleName(ValoTheme.BUTTON_BORDERLESS);
 		createNewUser.addClickListener( clickEvent -> {
@@ -51,7 +51,8 @@ public class WebLoginView extends Window implements LoginView{
 			Label usernameLabel = new Label("Username");
 			TextField usernameField = new TextField();
 			Label passwordLabel = new Label("Password");
-			TextField passwordField = new TextField();
+			PasswordField passwordField = new PasswordField("Password", "");
+			passwordField.setImmediate(true);
 			Label languageLabel = new Label("Language");
 			TextField languageField = new TextField();
 			
@@ -99,9 +100,10 @@ public class WebLoginView extends Window implements LoginView{
 		loginBox.addComponent(username);
 		loginBox.addComponent(password);
 		loginBox.addComponent(enterShortcut);
+		loginBox.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
 		layout.addComponent(loginBox);
 		layout.addComponent(createNewUser);
-		layout.setDefaultComponentAlignment(Alignment.TOP_LEFT);
+		layout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
 		setContent(layout);
 		setSizeFull();
 		setModal(false);

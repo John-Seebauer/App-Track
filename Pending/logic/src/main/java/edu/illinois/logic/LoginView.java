@@ -10,6 +10,7 @@ public interface LoginView extends CommonView {
 	interface ActionListener {
 		boolean authenticate(String username, String password);
 		void addNewUser(String name, String username, String password, String language);
+		void reloadConfig();
 	}
 	
 	

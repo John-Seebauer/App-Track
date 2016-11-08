@@ -6,4 +6,6 @@ package edu.illinois.logic;
  */
 public interface CommonModel {
 	void init();
+	String getProperty(String name);
+	void reloadConfig();
 }

@@ -13,4 +13,12 @@ public abstract class CommonPresenter<V extends CommonView,M extends CommonModel
 		this.view = view;
 		this.model = model;
 	}
+	
+	public String getProperty(String name) {
+		return model.getProperty(name);
+	}
+	
+	public void reloadConfig() {
+		model.reloadConfig();
+	}
 }

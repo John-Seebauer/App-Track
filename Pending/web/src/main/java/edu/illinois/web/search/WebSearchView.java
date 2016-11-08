@@ -5,6 +5,10 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 import edu.illinois.logic.SearchView;
 import edu.illinois.web.AbstractWebView;
+import edu.illinois.web.util.DialogBuilder;
+import edu.illinois.web.util.DialogType;
+
+import java.sql.SQLException;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
@@ -49,10 +53,8 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		Button getActors = new Button("Get actors for movie");
 		getActors.addClickListener(event -> {
 			if (movieInput.getValue() != null) {
-				changeContainer( String.format(
-						"SELECT actors.name FROM actors WHERE actors.id IN " +
-								"(SELECT actsIn.actorID FROM actsIn WHERE actsIn.movieID = " +
-								"(SELECT movies.movieID FROM movies WHERE movies.title=\"%s\" LIMIT 1))",
+				changeContainer(String.format(
+						actionListener.getProperty("backend.GET_ACTORS_FOR_MOVIE"),
 						movieInput.getValue()));
 			}
 		});
@@ -71,19 +73,20 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 				String firstname = actorInput.getValue().split(" ")[0];
 				String lastname = actorInput.getValue().split(" ")[1];
 				changeContainer(String.format(
-						"SELECT movies.title FROM movies,actors WHERE actors.name=\"%s, %s\" AND movies.movieID = " +
-								"(SELECT actsIn.movieID FROM actsIn WHERE actsIn.actorID = actors.id LIMIT 1)",
+						actionListener.getProperty("backend.GET_MOVIES_FOR_ACTOR"),
 						lastname, firstname));
 			}
 		});
 		firstQuery.addComponent(actorInput);
 		firstQuery.addComponent(moviesForActor);
+		firstQuery.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 		firstQuery.setExpandRatio(actorInput, 1.0f);
 		
 		HorizontalLayout secondQuery = new HorizontalLayout();
 		secondQuery.setSpacing(true);
 		secondQuery.addComponent(actorInput);
 		secondQuery.addComponent(moviesForActor);
+		secondQuery.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 		secondQuery.setExpandRatio(actorInput, 1.0f);
 		
 		HorizontalLayout top = new HorizontalLayout();
@@ -110,17 +113,44 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		baseContainer.addComponent(secondQuery);
 		baseContainer.addComponent(top);
 		baseContainer.addComponent(databaseGrid);
+		baseContainer.setExpandRatio(databaseGrid, 1.0f);
 		addComponent(baseContainer);
 		setExpandRatio(baseContainer, 1.0f);
 	}
 	
 	private void changeContainer(String query) {
-		
-		SQLContainer container = actionListener.requestQuery(query);
-		if (container != null) {
-			container.setAutoCommit(true);
-			databaseGrid.removeAllColumns();
-			databaseGrid.setContainerDataSource(container);
+		try {
+			SQLContainer container = actionListener.requestQuery(query);
+			if (container != null) {
+				container.setAutoCommit(true);
+				databaseGrid.removeAllColumns();
+				databaseGrid.setContainerDataSource(container);
+			}
+		} catch (SQLException error) {
+			
+			Throwable parent = error;
+			while (parent.getCause() != null) {
+				parent = parent.getCause();
+			}
+			
+			TextArea output = new TextArea();
+			output.setSizeFull();
+			output.setWordwrap(false);
+			
+			StringBuilder outputText = new StringBuilder();
+			outputText.append(error.getLocalizedMessage()).append('\n').append('\n');
+			outputText.append(query).append('\n').append('\n');
+			for (StackTraceElement stackTraceElement : error.getStackTrace()) {
+				outputText.append(stackTraceElement.toString()).append("\n");
+			}
+			output.setValue(outputText.toString());
+			output.setEnabled(false);
+			DialogBuilder builder = new DialogBuilder(UI.getCurrent(), output, DialogType.ERROR)
+					.title(parent.getLocalizedMessage())
+					.yesText("OK");
+			builder.display();
+			
 		}
+		
 	}
 }

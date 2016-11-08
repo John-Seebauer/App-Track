@@ -10,16 +10,20 @@ import edu.illinois.util.DatabaseRequestFormat;
 import edu.illinois.util.DatabaseTable;
 import edu.illinois.util.Pair;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
 public class StorageService {
+	private final static String CONF_FILE_PATH = "src/resources/properties.conf";
 	private static StorageService service;
 	private final static String driver = "com.mysql.jdbc.Driver";
 	private final static String path = "jdbc:mysql://localhost:3306";
@@ -29,8 +33,9 @@ public class StorageService {
 	private final static String defaultDatabase = "MOVIE_MATCHER";
 	private JDBCConnectionPool pool;
 	private Map<String, TableQuery> tableQueryDelegates;
+	private Properties properties;
 	
-	public static StorageService getInstance() throws SQLException {
+	static StorageService getInstance() throws SQLException {
 		if(service == null) {
 			service = new StorageService();
 			service.init();
@@ -62,6 +67,8 @@ public class StorageService {
 			
 		}
 		arbitraryCommand.close();
+		
+		reloadProperties();
 	}
 	
 	
@@ -191,5 +198,26 @@ public class StorageService {
 	
 	public SQLContainer getConstraintBasedContainer(String tableName) throws SQLException {
 		return new SQLContainer(tableQueryDelegates.get(tableName));
+	}
+	
+	public String getProperty(String name) {
+		return properties.getProperty(name);
+	}
+	
+	public void reloadProperties() {
+		properties = new Properties();
+		FileInputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(CONF_FILE_PATH);
+			properties.load(inputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(inputStream != null) try {
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

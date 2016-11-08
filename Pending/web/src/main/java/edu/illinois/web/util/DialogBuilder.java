@@ -1,6 +1,7 @@
 package edu.illinois.web.util;
 
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -47,7 +48,7 @@ public class DialogBuilder {
 		widthUnit = Sizeable.Unit.PERCENTAGE;
 		height = DEFAULT_HEIGHT;
 		heightUnit = Sizeable.Unit.PERCENTAGE;
-		
+		this.type = type;
 	}
 	
 	public DialogBuilder title(String title) {
@@ -105,13 +106,15 @@ public class DialogBuilder {
 	}
 	
 	public void display() {
-		PopupDialog dialog = new PopupDialog(ui, title, content, width, widthUnit, okText, noText, cancelText,
+		PopupDialog dialog = new PopupDialog(ui, title, type, content, width, widthUnit, okText, noText, cancelText,
 				height, heightUnit, showNo, showCancel, consumer, isCloseValid);
 		dialog.display();
 	}
 	
 	private class PopupDialog extends Window {
 		private final UI ui;
+		private final String title;
+		private final DialogType type;
 		private final AbstractComponent content;
 		private final float width;
 		private final Unit widthUnits;
@@ -125,12 +128,14 @@ public class DialogBuilder {
 		private final Consumer<YesNoCancelResult> resultConsumer;
 		private final BooleanSupplier isCloseValid;
 		
-		PopupDialog(UI ui, String title, AbstractComponent content, float width, Unit widthUnits,
+		PopupDialog(UI ui, String title, DialogType type, AbstractComponent content, float width, Unit widthUnits,
 		            String yesText, String noText, String cancelText, float height, Unit heightUnits,
 		            boolean noEnabled, boolean cancelEnabled, Consumer<YesNoCancelResult> resultConsumer,
 		            BooleanSupplier isCloseValid) {
-			super(title);
+			super();
 			this.ui = ui;
+			this.title = title;
+			this.type = type;
 			this.content = content;
 			this.width = width;
 			this.widthUnits = widthUnits;
@@ -155,7 +160,22 @@ public class DialogBuilder {
 			HorizontalLayout bottomBar = new HorizontalLayout();
 			bottomBar.setSpacing(true);
 			mainLayout.setMargin(true);
-			mainLayout.setSpacing(false);
+			mainLayout.setSpacing(true);
+			
+			
+			HorizontalLayout titleBar = new HorizontalLayout();
+			Image icon = new Image();
+			if(DialogType.INFO.equals(type)) {
+				icon.setData(FontAwesome.INFO);
+			} else if(DialogType.WARNING.equals(type)) {
+				icon.setData(FontAwesome.EXCLAMATION);
+			} else {
+				icon.setData(FontAwesome.EXCLAMATION_TRIANGLE);
+			}
+			titleBar.addComponent(icon);
+			titleBar.addComponent(new Label(title));
+			mainLayout.addComponent(titleBar);
+			
 			mainLayout.addComponent(content);
 			
 			bottomBar.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
@@ -206,6 +226,7 @@ public class DialogBuilder {
 			mainLayout.addComponent(bottomBar);
 			mainLayout.setComponentAlignment(bottomBar, Alignment.BOTTOM_CENTER);
 			mainLayout.setSizeFull();
+			mainLayout.setExpandRatio(content, 1.0f);
 			base.setContent(mainLayout);
 			base.setSizeFull();
 			setContent(base);

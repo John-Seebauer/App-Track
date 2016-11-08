@@ -30,7 +30,7 @@ public class NavigationMenu extends CssLayout {
 		buttonLayout.setSpacing(true);
 		buttonLayout.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
 		buttonLayout.addStyleName(ValoTheme.MENU_TITLE);
-		Label title = new Label("Project Pending", ContentMode.TEXT);
+		Label title = new Label("Movie Matcher", ContentMode.TEXT);
 		title.addStyleName(ValoTheme.LABEL_H2);
 		title.setSizeUndefined();
 		buttonLayout.addComponent(title);
