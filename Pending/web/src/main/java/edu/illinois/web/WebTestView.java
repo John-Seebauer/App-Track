@@ -2,10 +2,7 @@ package edu.illinois.web;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 import edu.illinois.logic.TestView;
 import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
@@ -53,6 +50,10 @@ public class WebTestView extends AbstractWebView implements TestView {
 			showMessage("Configuration reloaded from file.");
 		});
 		addComponent(resetConfigButton);
+		
+		TextArea log = new TextArea();
+		log.setWordwrap(false);
+		
 	}
 	
 	@Override

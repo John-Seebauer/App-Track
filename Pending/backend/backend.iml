@@ -28,5 +28,6 @@
     <orderEntry type="library" name="Maven: com.vaadin:vaadin-client-compiled:7.7.1" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin:vaadin-themes:7.7.1" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.39" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
   </component>
 </module>

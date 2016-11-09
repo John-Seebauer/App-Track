@@ -7,13 +7,12 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import edu.illinois.backend.WebCommonModel;
+import edu.illinois.backend.WebGroupRecommendModel;
+import edu.illinois.backend.WebSingleRecommendModel;
 import edu.illinois.backend.WebTestModel;
 import edu.illinois.backend.databaseViewer.WebDatabaseViewerModel;
 import edu.illinois.backend.search.WebSearchModel;
-import edu.illinois.logic.CommonPresenter;
-import edu.illinois.logic.DatabaseViewerPresenter;
-import edu.illinois.logic.SearchPresenter;
-import edu.illinois.logic.TestPresenter;
+import edu.illinois.logic.*;
 import edu.illinois.web.search.WebSearchView;
 import edu.illinois.web.util.UncaughtExceptionDialog;
 
@@ -26,6 +25,10 @@ public class MainUI extends HorizontalLayout {
 	enum ViewTypes {
 		SEARCH (WebSearchView.class, SearchPresenter.class, WebSearchModel.class,
 				"Search", FontAwesome.SEARCH),
+		SINGLE(WebSingleRecommendView.class, SingleRecommendPresenter.class, WebSingleRecommendModel.class,
+				"Single Recommendation", FontAwesome.USER),
+		GROUP(WebGroupRecommendView.class, GroupRecommendPresenter.class, WebGroupRecommendModel.class,
+				"Group Recommendation", FontAwesome.USERS),
 		ABOUT (WebAboutView.class, null, null,
 				"About", FontAwesome.INFO),
 		DATABASE(WebDatabaseViewerView.class, DatabaseViewerPresenter.class, WebDatabaseViewerModel.class,

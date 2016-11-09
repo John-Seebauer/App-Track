@@ -51,7 +51,7 @@ public class WebLoginView extends Window implements LoginView{
 			Label usernameLabel = new Label("Username");
 			TextField usernameField = new TextField();
 			Label passwordLabel = new Label("Password");
-			PasswordField passwordField = new PasswordField("Password", "");
+			PasswordField passwordField = new PasswordField();
 			passwordField.setImmediate(true);
 			Label languageLabel = new Label("Language");
 			TextField languageField = new TextField();
