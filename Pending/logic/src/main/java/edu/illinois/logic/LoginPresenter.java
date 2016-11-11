@@ -1,11 +1,13 @@
 package edu.illinois.logic;
 
+import java.util.logging.Logger;
+
 /**
  * Created by john on 10/22/16.
  */
 public class LoginPresenter<V extends LoginView, M extends LoginModel> extends CommonPresenter<V,M>
 	implements LoginView.ActionListener {
-	
+	private final static Logger logger = Logger.getLogger(LoginPresenter.class.getName());
 	@Override
 	public void init(V view, M model) {
 		this.view = view;

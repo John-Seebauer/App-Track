@@ -6,12 +6,13 @@ import com.vaadin.ui.UI;
 import edu.illinois.logic.SingleRecommendView;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 11/8/16.
  */
 public class WebSingleRecommendView extends AbstractWebView implements SingleRecommendView {
-	
+	private final static Logger logger = Logger.getLogger(WebSingleRecommendView.class.getName());
 	
 	@Override
 	public void init(UI ui) {

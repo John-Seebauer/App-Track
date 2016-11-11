@@ -2,11 +2,13 @@ package edu.illinois.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 /**
- * Created by john on 10/16/16.
+ * Created by John Seebauer (seebaue2) on 10/16/16.
  */
 public class DatabaseRequestFormat {
+	private final static Logger logger = Logger.getLogger(DatabaseRequestFormat.class.getName());
 	private final String database;
 	Collection<Pair<String, Class<?>>> attributeList;
 	

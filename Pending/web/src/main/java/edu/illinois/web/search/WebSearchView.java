@@ -9,12 +9,13 @@ import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
 public class WebSearchView extends AbstractWebView implements SearchView {
-	
+	private final static Logger logger = Logger.getLogger(WebSearchView.class.getName());
 	private UI ui;
 	private Grid databaseGrid;
 	private SearchView.ActionListener actionListener;

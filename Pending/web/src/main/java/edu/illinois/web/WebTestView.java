@@ -7,10 +7,13 @@ import edu.illinois.logic.TestView;
 import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 
+import java.util.logging.Logger;
+
 /**
  * Created by john on 9/24/16.
  */
 public class WebTestView extends AbstractWebView implements TestView {
+	private final static Logger logger = Logger.getLogger(WebTestView.class.getName());
 	
 	private TestView.ActionListener actionListener;
 	
@@ -50,6 +53,12 @@ public class WebTestView extends AbstractWebView implements TestView {
 			showMessage("Configuration reloaded from file.");
 		});
 		addComponent(resetConfigButton);
+		
+		Button throwException = new Button("Throw Exception");
+		throwException.addClickListener(event -> {
+			throw new RuntimeException(new NullPointerException("Test NPE"));
+		});
+		addComponent(throwException);
 		
 		TextArea log = new TextArea();
 		log.setWordwrap(false);

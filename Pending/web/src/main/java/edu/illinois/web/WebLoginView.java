@@ -10,11 +10,13 @@ import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 10/22/16.
  */
 public class WebLoginView extends Window implements LoginView{
+	private final static Logger logger = Logger.getLogger(WebLoginView.class.getName());
 	
 	private final UI ui;
 	private ActionListener actionListener;

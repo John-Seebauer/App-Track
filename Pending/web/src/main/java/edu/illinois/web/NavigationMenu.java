@@ -10,11 +10,13 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
 public class NavigationMenu extends CssLayout {
+	private final static Logger logger = Logger.getLogger(NavigationMenu.class.getName());
 	private final Navigator navigator;
 	private final CssLayout menuContainer;
 	private final CssLayout menuLayoutList;

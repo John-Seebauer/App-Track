@@ -6,10 +6,13 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
+import java.util.logging.Logger;
+
 /**
  * Created by John Seebauer (seebaue2) on 9/24/16.
  */
 public class WebAboutView extends AbstractWebView implements View {
+	private final static Logger logger = Logger.getLogger(WebAboutView.class.getName());
 	private UI ui;
 	
 	WebAboutView() { /* Created via reflection */ }

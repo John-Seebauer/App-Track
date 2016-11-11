@@ -3,11 +3,13 @@ package edu.illinois.util;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/24/16.
  */
 public class DatabaseEntry implements Serializable {
+	private final static Logger logger = Logger.getLogger(DatabaseEntry.class.getName());
 	private final String database;
 	private Map<Pair<String, Class<?>>, Object> attributes;
 	

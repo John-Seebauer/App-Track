@@ -4,10 +4,13 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Label;
 
+import java.util.logging.Logger;
+
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
 public class WebErrorView extends AbstractWebView implements View {
+	private final static Logger logger = Logger.getLogger(WebErrorView.class.getName());
 	
 	public static final String VIEW_NAME = "Error";
 	

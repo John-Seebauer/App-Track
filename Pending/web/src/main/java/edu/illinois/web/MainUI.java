@@ -14,12 +14,15 @@ import edu.illinois.backend.databaseViewer.WebDatabaseViewerModel;
 import edu.illinois.backend.search.WebSearchModel;
 import edu.illinois.logic.*;
 import edu.illinois.web.search.WebSearchView;
-import edu.illinois.web.util.UncaughtExceptionDialog;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
 public class MainUI extends HorizontalLayout {
+	private final static Logger logger = Logger.getLogger(MainUI.class.getName());
 	private final BaseUI ui;
 	
 	enum ViewTypes {
@@ -65,13 +68,11 @@ public class MainUI extends HorizontalLayout {
 		
 		final Navigator menuNavigator = new Navigator(ui, navContainer);
 		menuNavigator.setErrorView(WebErrorView.class);
-		UncaughtExceptionDialog.ui = ui;
-		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionDialog());
 		menu = new NavigationMenu(menuNavigator);
 		try {
 			createViews(menu);
 		} catch (IllegalAccessException | InstantiationException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Could not create Views!", e);
 		}
 		
 		menuNavigator.addViewChangeListener(new ViewChangeListener() {

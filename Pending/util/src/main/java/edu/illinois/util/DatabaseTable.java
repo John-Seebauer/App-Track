@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 10/16/16.
  */
 public class DatabaseTable {
+	private final static Logger logger = Logger.getLogger(DatabaseTable.class.getName());
 	private String database;
 	private final DatabaseRequestFormat columns;
 	private final List<DatabaseEntry> rows;

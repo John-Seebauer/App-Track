@@ -1,12 +1,13 @@
 package edu.illinois.util;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/24/16.
  */
 public class Pair<T1, T2> {
-	
+	private final static Logger logger = Logger.getLogger(Pair.class.getName());
 	private final T1 arg1;
 	private final T2 arg2;
 	

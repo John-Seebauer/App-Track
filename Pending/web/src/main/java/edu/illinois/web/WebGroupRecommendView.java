@@ -5,11 +5,13 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Created by john on 11/8/16.
  */
 public class WebGroupRecommendView extends AbstractWebView {
+	private final static Logger logger = Logger.getLogger(WebGroupRecommendView.class.getName());
 	
 	@Override
 	public void init(UI ui) {

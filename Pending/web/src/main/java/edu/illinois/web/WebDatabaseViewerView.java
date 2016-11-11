@@ -6,10 +6,13 @@ import com.vaadin.ui.*;
 import edu.illinois.logic.DatabaseViewerView;
 import edu.illinois.util.DatabaseTable;
 
+import java.util.logging.Logger;
+
 /**
  * Created by John Seebauer (seebaue2) on 10/16/16.
  */
 public class WebDatabaseViewerView  extends AbstractWebView implements DatabaseViewerView {
+	private final static Logger logger = Logger.getLogger(WebDatabaseViewerView.class.getName());
 	private DatabaseViewerView.ActionListener actionListener;
 	private UI ui;
 	private Grid databaseGrid;

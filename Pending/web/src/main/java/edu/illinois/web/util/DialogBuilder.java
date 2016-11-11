@@ -10,12 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 9/18/16.
  */
 public class DialogBuilder {
-	
+	private final static Logger logger = Logger.getLogger(DialogBuilder.class.getName());
 	private final UI ui;
 	
 	private final String DEFAULT_ACCEPT_TEXT = "OK";
