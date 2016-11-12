@@ -10,7 +10,7 @@
           </option>
           <option name="goals">
             <list>
-              <option value="compile" />
+              <option value="vaadin:compile" />
               <option value="package" />
               <option value="-DskipTests" />
               <option value="install" />
