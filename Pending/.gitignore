@@ -2,4 +2,7 @@
 **/target
 
 # ignore personal settings
-.idea/
+.idea/*.xml
+.idea/copyright/
+.idea/libraries/
+.idea/shelf/

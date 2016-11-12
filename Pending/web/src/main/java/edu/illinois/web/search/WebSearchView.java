@@ -9,6 +9,7 @@ import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -128,7 +129,9 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 				databaseGrid.setContainerDataSource(container);
 			}
 		} catch (SQLException error) {
+			logger.log(Level.FINE, "Query failed:\t" + query, error);
 			
+			//Below is a modified version of the usual logger to add the query.
 			Throwable parent = error;
 			while (parent.getCause() != null) {
 				parent = parent.getCause();

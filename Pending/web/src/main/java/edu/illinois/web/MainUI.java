@@ -98,7 +98,7 @@ public class MainUI extends HorizontalLayout {
 	
 	private void createViews(NavigationMenu menu) throws IllegalAccessException, InstantiationException {
 		for(ViewTypes item : ViewTypes.values()) {
-			WebAbstractLayout view = (WebAbstractLayout) item.viewType.newInstance();
+			AbstractWebView view = (AbstractWebView) item.viewType.newInstance();
 			WebCommonModel model = null;
 			if(item.modelType != null) {
 				model = (WebCommonModel) item.modelType.newInstance();

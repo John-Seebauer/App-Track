@@ -27,7 +27,7 @@ public class StorageService {
 	private final static String driver = "com.mysql.jdbc.Driver";
 	private final static String path = "jdbc:mysql://localhost:3306";
 	private final static String superuser = "SUPER_USER";
-	private final static String defaultUser = "SUPER_USER";
+	private final static String defaultUser = "USER";
 	private final static String defaultPassword = "PASSWORD";
 	private final static String defaultDatabase = "MOVIE_MATCHER";
 	private JDBCConnectionPool pool;
@@ -96,12 +96,12 @@ public class StorageService {
 			}
 			
 		} catch (SQLException e) {
-			logger.log(Level.WARNING, "Failed to execute SQL statement.", e);
+			logger.log(Level.WARNING, "Failed to run query:\t"+ query, e);
 		} finally {
 			if (statement != null) try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.log(Level.WARNING, "Failed to close SQL statement.", e);
+				logger.log(Level.WARNING, "Failed to close SQL statement for query:\t" + query, e);
 			}
 			if (connect != null) try {
 				connect.close();
@@ -171,12 +171,12 @@ public class StorageService {
 				decodedQuery.addRow(dbEntry);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.WARNING, "Failed to execute SQL statement.", e);
+			logger.log(Level.WARNING, "Failed to execute query:\t" + query, e);
 		} finally {
 			if (statement != null) try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.log(Level.WARNING, "Failed to close SQL statement.", e);
+				logger.log(Level.WARNING, "Failed to close query:\t"+query, e);
 			}
 			if (connect != null) try {
 				connect.close();

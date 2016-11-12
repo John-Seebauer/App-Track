@@ -6,6 +6,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -23,6 +24,7 @@ public class UncaughtExceptionDialog extends DefaultErrorHandler {
 	
 	
 	private DialogBuilder formatException(Throwable error) {
+		logger.log(Level.WARNING, "An unhandled exception occurred.", error);
 		Throwable parent = error;
 		while (parent.getCause() != null) {
 			parent = parent.getCause();
@@ -34,7 +36,7 @@ public class UncaughtExceptionDialog extends DefaultErrorHandler {
 		
 		StringBuilder outputText = new StringBuilder( error.getLocalizedMessage()).append('\n');
 		for (StackTraceElement stackTraceElement : error.getStackTrace()) {
-			outputText.append(stackTraceElement.toString()).append("\n");
+			outputText.append('\t').append(stackTraceElement.toString()).append("\n");
 		}
 		output.setValue(outputText.toString());
 		output.setIcon(FontAwesome.EXCLAMATION_TRIANGLE);

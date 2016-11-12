@@ -89,6 +89,7 @@ public class ConfigurationService {
 	}
 	
 	public void reloadProperties() {
+		logger.log(Level.INFO, "Reloading configuration file.");
 		properties = new Properties();
 		FileInputStream inputStream = null;
 		try {

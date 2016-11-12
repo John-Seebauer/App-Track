@@ -1,6 +1,7 @@
 package edu.illinois.web;
 
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -10,12 +11,13 @@ import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Created by John Seebauer (seebaue2) on 10/22/16.
  */
-public class WebLoginView extends Window implements LoginView{
+public class WebLoginView extends Window implements LoginView {
 	private final static Logger logger = Logger.getLogger(WebLoginView.class.getName());
 	
 	private final UI ui;
@@ -132,5 +134,16 @@ public class WebLoginView extends Window implements LoginView{
 	@Override
 	public void showError(Throwable error) {
 		new DialogBuilder(ui, new Label(error.getLocalizedMessage()), DialogType.ERROR).display();
+	}
+	
+	@Override
+	public void showAndLogError(Logger log, Level level, String message, Throwable error) {
+		log.log(level, message, error);
+		showError(error);
+	}
+	
+	@Override
+	public void enter(ViewChangeListener.ViewChangeEvent event) {
+		ui.access( () -> ui.getPage().setTitle(event.getViewName()));
 	}
 }

@@ -4,6 +4,7 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import edu.illinois.util.DatabaseTable;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -36,7 +37,7 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 		try {
 			return model.getConstraintBasedContainer(table);
 		} catch (SQLException ex) {
-			view.showError(ex);
+			view.showAndLogError(logger, Level.FINE, "Request failed.", ex);
 		}
 		return null;
 	}

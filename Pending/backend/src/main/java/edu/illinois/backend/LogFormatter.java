@@ -10,7 +10,7 @@ import java.util.logging.LogRecord;
  * Created by John Seebauer (seebaue2) on 11/11/16.
  */
 public class LogFormatter extends Formatter {
-	DateFormat date = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS");
+	private DateFormat date = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS");
 	
 	@Override
 	public String format(LogRecord logRecord) {
@@ -19,9 +19,11 @@ public class LogFormatter extends Formatter {
 				.append(date.format(new Date(logRecord.getMillis()))).append('\t')
 				.append('[').append(logRecord.getSourceClassName()).append("::").append(logRecord.getSourceMethodName()).append(']')
 				.append('\t').append(logRecord.getMessage()).append('\n');
-		builder.append(logRecord.getThrown().getLocalizedMessage()).append('\n');
-		for(StackTraceElement elem : logRecord.getThrown().getStackTrace()) {
-			builder.append('\t').append(elem.toString()).append('\n');
+		if(logRecord.getThrown() != null) {
+			builder.append(logRecord.getThrown().getLocalizedMessage()).append('\n');
+			for(StackTraceElement elem : logRecord.getThrown().getStackTrace()) {
+				builder.append('\t').append(elem.toString()).append('\n');
+			}
 		}
 		return builder.toString();
 	}

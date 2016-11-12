@@ -61,7 +61,7 @@ public class WebDatabaseViewerView  extends AbstractWebView implements DatabaseV
 		top.setExpandRatio(queryBar, 1.0f);
 		
 		databaseGrid = new Grid();
-		databaseGrid.setContainerDataSource(actionListener.getConstraintBasedContainer("User"));
+		databaseGrid.setContainerDataSource(actionListener.getConstraintBasedContainer("movies"));
 		databaseGrid.setSizeFull();
 		
 		/*DatabaseTable userTable = actionListener.getDatabaseTable("user");
