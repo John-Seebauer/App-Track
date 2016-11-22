@@ -1,5 +1,7 @@
 package edu.illinois.util;
 
+import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -54,5 +56,24 @@ public class JDBCResult {
 	
 	public static JDBCResult createFailure(JDBCTask query, Throwable ex) {
 		return new JDBCResult(true, query, null, ex);
+	}
+	
+	public IndexedContainer formatToContainer() {
+		IndexedContainer container = new IndexedContainer();
+		
+		for (Pair<String, Class<?>> entry : result.getColumns()) {
+			container.addContainerProperty(entry.getOne(), entry.getTwo(), null);
+		}
+		
+		for (DatabaseEntry row : result.getRows()) {
+			//Looks weird, but it's in the docs
+			Object itemID = container.addItem();
+			Item item = container.getItem(itemID);
+			for (Pair<String, Class<?>> entry : result.getColumns()) {
+				item.getItemProperty(entry.getOne()).setValue(row.getAttribute(entry.getOne(), entry.getTwo()));
+			}
+		}
+		
+		return container;
 	}
 }

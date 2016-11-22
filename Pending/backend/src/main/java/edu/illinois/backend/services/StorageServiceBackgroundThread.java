@@ -59,6 +59,16 @@ public class StorageServiceBackgroundThread implements Runnable {
 	@Override
 	public void run() {
 		logger.info("Run called on StorageService Background thread.");
+		Thread.currentThread().setUncaughtExceptionHandler( (thread, throwable) -> {
+			logger.log(Level.SEVERE, String.format(
+					"%s had an uncaught exception: %s", thread.getName(), throwable.getLocalizedMessage()),  throwable);
+			logger.info("Restarting StorageService background thread.");
+			try {
+				create(bus);
+			} catch (SQLException e) {
+				logger.log(Level.SEVERE, "Could not restart StorageService background thread!", e);
+			}
+		});
 		while (!askedToTerminate) {
 			try {
 				JDBCTask task = todoTasks.take();
@@ -129,6 +139,13 @@ public class StorageServiceBackgroundThread implements Runnable {
 				case Types.FLOAT:
 					format.addAttribute(columnName, Float.class);
 					break;
+				case -1:
+					//For TEXT data type
+					if(metaData.getColumnTypeName(i).equals("VARCHAR")) {
+						format.addAttribute(columnName, String.class);
+						break;
+					}
+						
 				default:
 					throw new UnsupportedOperationException("Unknown type:\t" + metaData.getColumnType(i));
 			}
@@ -166,6 +183,5 @@ public class StorageServiceBackgroundThread implements Runnable {
 			statement.executeUpdate(query);
 		}
 	}
-	
 }
 

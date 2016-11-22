@@ -1,11 +1,6 @@
 package edu.illinois.logic;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
-import edu.illinois.util.DatabaseEntry;
-import edu.illinois.util.DatabaseTable;
 import edu.illinois.util.JDBCResult;
-import edu.illinois.util.Pair;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +18,7 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 		this.model = model;
 		model.init();
 		view.setActionListener(this);
+		model.setActionListener(this);
 	}
 	
 	@Override
@@ -36,31 +32,10 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	}
 	
 	@Override
-	public void initUPDATErequest(String query) {
-		model.runUPDATEquery(query);
-	}
-	
-	@Override
 	public void notifySELECTresponse(JDBCResult result) {
 		if (result.getResult().isPresent()) {
-			DatabaseTable table = result.getResult().get();
-			IndexedContainer container = new IndexedContainer();
-			
-			for (Pair<String, Class<?>> entry : table.getColumns()) {
-				container.addContainerProperty(entry.getOne(), entry.getTwo(), null);
-			}
-			
-			for (DatabaseEntry row : table.getRows()) {
-				//Looks weird, but it's in the docs
-				Object itemID = container.addItem();
-				Item item = container.getItem(itemID);
-				for (Pair<String, Class<?>> entry : table.getColumns()) {
-					item.getItemProperty(entry.getOne()).setValue(row.getAttribute(entry.getOne(), entry.getTwo()));
-				}
-			}
-			view.notifySELECTresponse(container);
+			view.notifySELECTresponse(result.formatToContainer());
 		}
-		
 	}
 	
 	@Override
@@ -91,6 +66,5 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 				view.showMessage("JDBCResult" + query + " failed.");
 			}
 		}
-		
 	}
 }

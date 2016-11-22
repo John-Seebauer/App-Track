@@ -22,19 +22,10 @@ public class WebDatabaseViewerModel extends WebCommonModel implements DatabaseVi
 	}
 	
 	@Override
-	public void runUPDATEquery(String query) {
-		storageService.runUPDATEquery(query, false, this::notifyUPDATEresponse, actionListener::notifyFailure);
-	}
-	
-	@Override
 	public void notifySELECTresponse(final JDBCResult result) {
 		actionListener.notifySELECTresponse(result);
 	}
 	
-	@Override
-	public void notifyUPDATEresponse(JDBCResult result) {
-		actionListener.notifyUPDATEresponse(result);
-	}
 	
 	public void setActionListener(ActionListener actionListener) {
 		this.actionListener = actionListener;
