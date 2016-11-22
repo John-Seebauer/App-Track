@@ -1,10 +1,9 @@
 package edu.illinois.web;
 
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 import edu.illinois.logic.DatabaseViewerView;
-import edu.illinois.util.DatabaseTable;
 
 import java.util.logging.Logger;
 
@@ -45,12 +44,7 @@ public class WebDatabaseViewerView  extends AbstractWebView implements DatabaseV
 		Button execute = new Button("Go");
 		execute.addClickListener( event -> {
 			if(queryBar.getValue() != null) {
-				SQLContainer container = actionListener.requestQuery(queryBar.getValue());
-				if(container != null ) {
-					container.setAutoCommit(true);
-					databaseGrid.removeAllColumns();
-					databaseGrid.setContainerDataSource(container);
-				}
+				actionListener.initSearchrequst(queryBar.getValue());
 			}
 			
 		});
@@ -61,35 +55,7 @@ public class WebDatabaseViewerView  extends AbstractWebView implements DatabaseV
 		top.setExpandRatio(queryBar, 1.0f);
 		
 		databaseGrid = new Grid();
-		databaseGrid.setContainerDataSource(actionListener.getConstraintBasedContainer("movies"));
 		databaseGrid.setSizeFull();
-		
-		/*DatabaseTable userTable = actionListener.getDatabaseTable("user");
-		if(userTable != null) {
-			Iterator<Pair<String, Class<?>>> columnIterator = userTable.getColumnIterator();
-			while (columnIterator.hasNext()) {
-				Pair<String, Class<?>> attribute = columnIterator.next();
-				String name = attribute.getOne();
-				Class<?> type = attribute.getTwo();
-				
-				databaseGrid.addColumn(name, type);
-			}
-			
-			
-			for(DatabaseEntry row : userTable.getRows()) {
-				List<Object> rowBuilder = new ArrayList<>();
-				columnIterator = userTable.getColumnIterator();
-				while (columnIterator.hasNext()) {
-					Pair<String, Class<?>> attribute = columnIterator.next();
-					String name = attribute.getOne();
-					Class<?> type = attribute.getTwo();
-					rowBuilder.add(row.getAttribute(name, type));
-				}
-				
-				databaseGrid.addRow(rowBuilder.toArray());
-			}
-		}*/
-		
 		
 		
 		baseContainer.addComponent(top);
@@ -103,12 +69,21 @@ public class WebDatabaseViewerView  extends AbstractWebView implements DatabaseV
 	@Override
 	public void enter(ViewChangeListener.ViewChangeEvent event) {
 		ui.access( () -> ui.getPage().setTitle(event.getViewName()));
-		
 	}
 	
-	public interface ActionListener {
-		DatabaseTable getDatabaseTable(String name);
-		SQLContainer requestQuery(String query);
-		SQLContainer createConnectionPool(String table);
+	@Override
+	public void notifySELECTresponse(IndexedContainer container) {
+		changeContainer(container);
 	}
+	
+	
+	private void changeContainer(IndexedContainer container) {
+		if (container != null) {
+			ui.access( () -> {
+				databaseGrid.removeAllColumns();
+				databaseGrid.setContainerDataSource(container);
+			});
+		}
+	}
+	
 }

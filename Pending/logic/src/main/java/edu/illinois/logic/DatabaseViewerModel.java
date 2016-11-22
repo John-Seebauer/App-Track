@@ -1,19 +1,27 @@
 package edu.illinois.logic;
 
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import edu.illinois.util.DatabaseTable;
-
-import java.sql.SQLException;
+import edu.illinois.util.JDBCResult;
 
 /**
  * Created by John Seebauer on 10/16/16.
  */
 public interface DatabaseViewerModel extends CommonModel {
 	
-	@Override
-	void init();
+	void runSELECTquery(String query);
 	
-	DatabaseTable runQuery(String query);
-	SQLContainer requestQuery(String query) throws SQLException;
-	SQLContainer getConstraintBasedContainer(String table) throws SQLException;
+	void runUPDATEquery(String query);
+	
+	void notifySELECTresponse(final JDBCResult result);
+	
+	void notifyUPDATEresponse(final JDBCResult result);
+	
+	void setActionListener(ActionListener actionListener);
+	
+	interface ActionListener {
+		void notifySELECTresponse(final JDBCResult result);
+		
+		void notifyUPDATEresponse(final JDBCResult result);
+		
+		void notifyFailure(final JDBCResult result);
+	}
 }

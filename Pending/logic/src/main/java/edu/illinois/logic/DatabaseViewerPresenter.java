@@ -1,9 +1,5 @@
 package edu.illinois.logic;
 
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
-
-import java.sql.SQLException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,25 +16,9 @@ public class DatabaseViewerPresenter<V extends DatabaseViewerView, M extends Dat
 		view.setActionListener(this);
 	}
 	
-	@Override
-	public SQLContainer requestQuery(String query) {
-		try {
-			return model.requestQuery(query);
-		} catch (SQLException ex) {
-			view.showAndLogError(logger, Level.FINE, "Query failed:\t" + query, ex);
-		}
-		return null;
-	}
 	
 	@Override
-	public SQLContainer getConstraintBasedContainer(String table) {
-		try {
-			return model.getConstraintBasedContainer(table);
-		} catch (SQLException ex) {
-			view.showAndLogError(logger, Level.FINE, "Request failed.", ex);
-		}
-		return null;
+	public void initSearchrequst(String query) {
+		model.runSELECTquery(query);
 	}
-	
-	
 }
