@@ -50,6 +50,8 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	public void notifyFailure(JDBCResult result) {
 		String query = " for query: " + result.getOriginalQuery().getQuery();
 		
+		view.queryFailedCleanup();
+		
 		if (!result.hadFailure()) {
 			if (result.getException().isPresent()) {
 				view.showAndLogError(logger, Level.WARNING, "JDBCResult" + query +

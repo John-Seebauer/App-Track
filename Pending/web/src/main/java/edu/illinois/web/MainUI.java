@@ -1,5 +1,6 @@
 package edu.illinois.web;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 /**
  * Created by John Seebauer (seebaue2) on 9/20/16.
  */
+@Push
 public class MainUI extends HorizontalLayout {
 	private final static Logger logger = Logger.getLogger(MainUI.class.getName());
 	private final BaseUI ui;

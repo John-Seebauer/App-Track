@@ -16,7 +16,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	private UI ui;
 	private Grid databaseGrid;
 	private SearchView.ActionListener actionListener;
-	
+	private ProgressBar progressBar;
 	
 	public WebSearchView() {
 		/* Created via reflection */
@@ -29,6 +29,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	@Override
 	public void notifySELECTresponse(IndexedContainer container) {
 		changeContainer(container);
+		progressBar.setVisible(false);
 	}
 	
 	@Override
@@ -50,6 +51,11 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		baseContainer.setSpacing(true);
 		baseContainer.setMargin(true);
 		baseContainer.setSizeFull();
+		
+		
+		progressBar = new ProgressBar();
+		progressBar.setIndeterminate(true);
+		progressBar.setVisible(false);
 		
 		TextField movieInput = new TextField("Movie");
 		movieInput.setWidth("100%");
@@ -99,12 +105,14 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		search.addClickListener(event -> {
 			if (queryBar.getValue() != null) {
 				actionListener.initSearchrequst(queryBar.getValue());
+				progressBar.setVisible(true);
 			}
 		});
 		
 		top.setSpacing(true);
 		top.addComponent(queryBar);
 		top.addComponent(search);
+		top.addComponent(progressBar);
 		top.setWidth("100%");
 		top.setExpandRatio(queryBar, 1.0f);
 		
@@ -129,5 +137,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		}
 	}
 	
-	
+	public void queryFailedCleanup() {
+		ui.access( () -> progressBar.setVisible(false));
+	}
 }
