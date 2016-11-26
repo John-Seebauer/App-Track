@@ -20,6 +20,7 @@ public class Pair<T1, T2> {
 	public T1 getOne() {
 		return arg1;
 	}
+
 	
 	public T2 getTwo() {
 		return arg2;
