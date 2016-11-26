@@ -22,6 +22,7 @@ public class WebLoginView extends Window implements LoginView {
 	
 	private final UI ui;
 	private ActionListener actionListener;
+	private Consumer<String> displayAfterLogin;
 	
 	public WebLoginView(UI ui) {
 		super("Authentication required to proceed");
@@ -31,6 +32,7 @@ public class WebLoginView extends Window implements LoginView {
 	}
 	
 	void init(Consumer<String> displayAfterLogin) {
+		this.displayAfterLogin = displayAfterLogin;
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSizeFull();
 		layout.setMargin(true);
@@ -76,11 +78,6 @@ public class WebLoginView extends Window implements LoginView {
 					if(YesNoCancelResult.YES.equals(consumer)) {
 						actionListener.addNewUser(nameField.getValue(), usernameField.getValue(),
 							passwordField.getValue(), languageField.getValue());
-						if(actionListener.authenticate(usernameField.getValue(), passwordField.getValue())) {
-							displayAfterLogin.accept(usernameField.getValue());
-							close();
-							showMessage("Unknown user");
-						}
 					}
 				})
 				.display();
@@ -92,13 +89,7 @@ public class WebLoginView extends Window implements LoginView {
 		enterShortcut.addStyleName(ValoTheme.BUTTON_PRIMARY);
 		enterShortcut.addClickListener( listener -> {
 			String passwordText = password.getValue();
-			
-			if(actionListener.authenticate(username.getValue(), passwordText)) {
-				displayAfterLogin.accept(username.getValue());
-				close();
-			} else {
-				showMessage("Unknown user");
-			}
+			actionListener.authenticate(username.getValue(), passwordText);
 		});
 		
 		loginBox.addComponent(username);
@@ -121,6 +112,14 @@ public class WebLoginView extends Window implements LoginView {
 	@Override
 	public void setActionListener(ActionListener listener) {
 		this.actionListener = listener;
+	}
+	
+	@Override
+	public void loginUser(String username) {
+		ui.access( () -> {
+			displayAfterLogin.accept(username);
+			close();
+		});
 	}
 	
 	@Override

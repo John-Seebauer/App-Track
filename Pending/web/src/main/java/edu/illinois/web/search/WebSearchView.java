@@ -1,15 +1,11 @@
 package edu.illinois.web.search;
 
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 import edu.illinois.logic.SearchView;
 import edu.illinois.web.AbstractWebView;
-import edu.illinois.web.util.DialogBuilder;
-import edu.illinois.web.util.DialogType;
 
-import java.sql.SQLException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +16,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	private UI ui;
 	private Grid databaseGrid;
 	private SearchView.ActionListener actionListener;
-	
+	private ProgressBar progressBar;
 	
 	public WebSearchView() {
 		/* Created via reflection */
@@ -28,6 +24,12 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	
 	public void setActionListener(SearchView.ActionListener actionListener) {
 		this.actionListener = actionListener;
+	}
+	
+	@Override
+	public void notifySELECTresponse(IndexedContainer container) {
+		changeContainer(container);
+		progressBar.setVisible(false);
 	}
 	
 	@Override
@@ -50,12 +52,17 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		baseContainer.setMargin(true);
 		baseContainer.setSizeFull();
 		
+		
+		progressBar = new ProgressBar();
+		progressBar.setIndeterminate(true);
+		progressBar.setVisible(false);
+		
 		TextField movieInput = new TextField("Movie");
 		movieInput.setWidth("100%");
 		Button getActors = new Button("Get actors for movie");
 		getActors.addClickListener(event -> {
 			if (movieInput.getValue() != null) {
-				changeContainer(String.format(
+				actionListener.initSearchrequst(String.format(
 						actionListener.getProperty("backend.GET_ACTORS_FOR_MOVIE"),
 						movieInput.getValue()));
 			}
@@ -74,7 +81,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 			if (actorInput.getValue() != null) {
 				String firstname = actorInput.getValue().split(" ")[0];
 				String lastname = actorInput.getValue().split(" ")[1];
-				changeContainer(String.format(
+				actionListener.initSearchrequst(String.format(
 						actionListener.getProperty("backend.GET_MOVIES_FOR_ACTOR"),
 						lastname, firstname));
 			}
@@ -97,18 +104,19 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		Button search = new Button("Search");
 		search.addClickListener(event -> {
 			if (queryBar.getValue() != null) {
-				changeContainer(queryBar.getValue());
+				actionListener.initSearchrequst(queryBar.getValue());
+				progressBar.setVisible(true);
 			}
 		});
 		
 		top.setSpacing(true);
 		top.addComponent(queryBar);
 		top.addComponent(search);
+		top.addComponent(progressBar);
 		top.setWidth("100%");
 		top.setExpandRatio(queryBar, 1.0f);
 		
 		databaseGrid = new Grid();
-		databaseGrid.setContainerDataSource(actionListener.getConstraintBasedContainer("User"));
 		databaseGrid.setSizeFull();
 		
 		baseContainer.addComponent(firstQuery);
@@ -120,41 +128,16 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		setExpandRatio(baseContainer, 1.0f);
 	}
 	
-	private void changeContainer(String query) {
-		try {
-			SQLContainer container = actionListener.requestQuery(query);
-			if (container != null) {
-				container.setAutoCommit(true);
+	private void changeContainer(IndexedContainer container) {
+		if (container != null) {
+			ui.access( () -> {
 				databaseGrid.removeAllColumns();
 				databaseGrid.setContainerDataSource(container);
-			}
-		} catch (SQLException error) {
-			logger.log(Level.FINE, "Query failed:\t" + query, error);
-			
-			//Below is a modified version of the usual logger to add the query.
-			Throwable parent = error;
-			while (parent.getCause() != null) {
-				parent = parent.getCause();
-			}
-			
-			TextArea output = new TextArea();
-			output.setSizeFull();
-			output.setWordwrap(false);
-			
-			StringBuilder outputText = new StringBuilder();
-			outputText.append(error.getLocalizedMessage()).append('\n').append('\n');
-			outputText.append(query).append('\n').append('\n');
-			for (StackTraceElement stackTraceElement : error.getStackTrace()) {
-				outputText.append(stackTraceElement.toString()).append("\n");
-			}
-			output.setValue(outputText.toString());
-			output.setEnabled(false);
-			DialogBuilder builder = new DialogBuilder(UI.getCurrent(), output, DialogType.ERROR)
-					.title(parent.getLocalizedMessage())
-					.yesText("OK");
-			builder.display();
-			
+			});
 		}
-		
+	}
+	
+	public void queryFailedCleanup() {
+		ui.access( () -> progressBar.setVisible(false));
 	}
 }

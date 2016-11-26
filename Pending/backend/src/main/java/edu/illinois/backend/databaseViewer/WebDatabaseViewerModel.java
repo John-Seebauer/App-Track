@@ -1,11 +1,9 @@
 package edu.illinois.backend.databaseViewer;
 
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import edu.illinois.backend.WebCommonModel;
 import edu.illinois.logic.DatabaseViewerModel;
-import edu.illinois.util.DatabaseTable;
+import edu.illinois.util.JDBCResult;
 
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
@@ -13,23 +11,23 @@ import java.util.logging.Logger;
  */
 public class WebDatabaseViewerModel extends WebCommonModel implements DatabaseViewerModel {
 	private final static Logger logger = Logger.getLogger(WebDatabaseViewerModel.class.getName());
+	private ActionListener actionListener;
 	
 	public WebDatabaseViewerModel() {
 		
 	}
 	
-	@Override
-	public DatabaseTable runQuery(String query) {
-		return storageService.runSELECTquery(query);
-	}
-	
-	public SQLContainer requestQuery(String query) throws SQLException {
-		return storageService.requestQuery(query);
+	public void runSELECTquery(String query) {
+		storageService.runSELECTquery(query, this::notifySELECTresponse,  actionListener::notifyFailure);
 	}
 	
 	@Override
-	public SQLContainer getConstraintBasedContainer(String table) throws SQLException {
-		return storageService.getConstraintBasedContainer(table);
+	public void notifySELECTresponse(final JDBCResult result) {
+		actionListener.notifySELECTresponse(result);
 	}
 	
+	
+	public void setActionListener(ActionListener actionListener) {
+		this.actionListener = actionListener;
+	}
 }

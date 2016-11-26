@@ -233,7 +233,8 @@ public class DialogBuilder {
 			setContent(base);
 			center();
 			setModal(true);
-			ui.addWindow(this);
+			
+			ui.access( () -> ui.addWindow(this));
 		}
 	}
 }

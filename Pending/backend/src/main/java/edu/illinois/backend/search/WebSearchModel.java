@@ -1,11 +1,9 @@
 package edu.illinois.backend.search;
 
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import edu.illinois.backend.WebCommonModel;
 import edu.illinois.logic.SearchModel;
-import edu.illinois.util.DatabaseTable;
+import edu.illinois.util.JDBCResult;
 
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
@@ -13,22 +11,33 @@ import java.util.logging.Logger;
  */
 public class WebSearchModel extends WebCommonModel implements SearchModel {
 	private final static Logger logger = Logger.getLogger(WebSearchModel.class.getName());
+	private ActionListener actionListener;
 	
 	public WebSearchModel() {
 		
 	}
 	
-	@Override
-	public DatabaseTable runQuery(String query) {
-		return storageService.runSELECTquery(query);
-	}
-	
-	public SQLContainer requestQuery(String query) throws SQLException {
-		return storageService.requestQuery(query);
+	public void runSELECTquery(String query) {
+		storageService.runSELECTquery(query, this::notifySELECTresponse,  actionListener::notifyFailure);
 	}
 	
 	@Override
-	public SQLContainer getConstraintBasedContainer(String table) throws SQLException {
-		return storageService.getConstraintBasedContainer(table);
+	public void runUPDATEquery(String query) {
+		storageService.runUPDATEquery(query, false, this::notifyUPDATEresponse, actionListener::notifyFailure);
+	}
+	
+	@Override
+	public void notifySELECTresponse(final JDBCResult result) {
+		actionListener.notifySELECTresponse(result);
+	}
+	
+	@Override
+	public void notifyUPDATEresponse(JDBCResult result) {
+		actionListener.notifyUPDATEresponse(result);
+	}
+	
+	@Override
+	public void setActionListener(ActionListener actionListener) {
+		this.actionListener = actionListener;
 	}
 }

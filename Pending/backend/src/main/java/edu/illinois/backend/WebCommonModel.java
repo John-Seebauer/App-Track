@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * Created by John Seebauer (seebaue2) on 10/16/16.
  */
-public class WebCommonModel implements CommonModel{
+public abstract class WebCommonModel implements CommonModel {
 	private final static Logger logger = Logger.getLogger(WebCommonModel.class.getName());
 	protected StorageService storageService;
 	protected ConfigurationService configurationService;

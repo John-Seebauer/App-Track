@@ -1,5 +1,6 @@
 package edu.illinois.web;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.Responsive;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Theme("mytheme")
+@Push
 public class BaseUI extends UI {
 	private final static Logger logger = Logger.getLogger(BaseUI.class.getName());
 	
@@ -30,8 +32,11 @@ public class BaseUI extends UI {
 	
 	    WebLoginView loginWindow = new WebLoginView(this);
 	    loginWindow.init(username -> {
-		    this.setContent(new MainUI(BaseUI.this, username));
-		    getNavigator().navigateTo(getNavigator().getState());
+		    getUI().access( () -> {
+			    this.setContent(new MainUI(BaseUI.this, username));
+			    getNavigator().navigateTo(getNavigator().getState());
+			    logger.info("Base created the Main UI.");
+		    });
 	    });
 	    loginWindow.center();
 	    setSizeFull();
