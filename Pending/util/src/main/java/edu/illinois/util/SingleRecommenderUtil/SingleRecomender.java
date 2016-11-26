@@ -1,15 +1,12 @@
 package edu.illinois.util.SingleRecommenderUtil;
 
 import com.sun.org.apache.xpath.internal.operations.String;
-import com.sun.xml.internal.fastinfoset.algorithm.IntegerEncodingAlgorithm;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import edu.illinois.util.Pair;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -35,16 +32,16 @@ public class SingleRecomender {
 		List<Pair<Integer, Float>> u1Movies = dataset.get(user1);
 		List<Pair<Integer, Float>> u2Movies = dataset.get(user2);
 
-		Float u1Sum =Float.valueOf((float)0.0);
-		Float u1SqrSum =Float.valueOf((float)0.0);
-		Float u2Sum =Float.valueOf((float)0.0);
-		Float u2SqrSum =Float.valueOf((float)0.0);
-		Float productSum =Float.valueOf((float)0.0);
+		Float u1Sum = 0.0f;
+		Float u1SqrSum =  0.0f;
+		Float u2Sum = 0.0f;
+		Float u2SqrSum = 0.0f;
+		Float productSum = 0.0f;
 		int N =0; //number of common movies
 
 		for(Pair<Integer,Float> r1: u1Movies) {
 			for(Pair<Integer,Float> r2: u2Movies) {
-				if(r1.getOne() == r2.getOne()) { //are the movie IDs equal
+				if(Objects.equals(r1.getOne(), r2.getOne())) { //are the movie IDs equal
 					N++;
 					u1Sum += r1.getTwo();
 					u1SqrSum += r1.getTwo()*r1.getTwo();
@@ -56,7 +53,7 @@ public class SingleRecomender {
 		}
 
 		if(0 == N) {
-			return Float.valueOf((float)0.0);
+			return 0.0f;
 		}
 
 		Float Sxx  = u1SqrSum - (u1Sum*u1Sum)/N;
@@ -64,7 +61,7 @@ public class SingleRecomender {
 		double Syx  = productSum - (u1Sum*u2Sum)/N;
 
 		if(0 == Sxx*Syy) {
-			return  Float.valueOf((float) 0.0);
+			return 0.0f;
 		}
 
 		double product = Sxx*Syy;
