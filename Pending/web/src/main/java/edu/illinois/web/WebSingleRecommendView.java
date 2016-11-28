@@ -1,6 +1,7 @@
 package edu.illinois.web;
 
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
 import edu.illinois.logic.SingleRecommendView;
@@ -29,6 +30,8 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 		box.addValueChangeListener( event -> {
 			showMessage("You selected " + box.getValue() + " but recommendations are not yet implemented.");
 		});
+		Button getRecsButton = new Button("Recommend something for me!");
+		getRecsButton.addClickListener(clickEvent -> );
 		setSpacing(true);
 		setMargin(true);
 		addComponent(box);
