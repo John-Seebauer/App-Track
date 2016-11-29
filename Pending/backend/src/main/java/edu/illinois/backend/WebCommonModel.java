@@ -13,6 +13,7 @@ public abstract class WebCommonModel implements CommonModel {
 	private final static Logger logger = Logger.getLogger(WebCommonModel.class.getName());
 	protected StorageService storageService;
 	protected ConfigurationService configurationService;
+	protected String user;
 	
 	@Override
 	public void init() {
@@ -28,5 +29,15 @@ public abstract class WebCommonModel implements CommonModel {
 	@Override
 	public void reloadConfig() {
 		configurationService.reloadProperties();
+	}
+	
+	@Override
+	public void setUser(String user) {
+		this.user = user;
+	}
+	
+	@Override
+	public String getUser() {
+		return user;
 	}
 }

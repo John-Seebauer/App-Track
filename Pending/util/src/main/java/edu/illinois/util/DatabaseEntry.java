@@ -1,5 +1,8 @@
 package edu.illinois.util;
 
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +19,7 @@ public class DatabaseEntry implements Serializable {
 	public DatabaseEntry(String database) {
 		this.database = database;
 		
-		this.attributes = new HashMap();
+		this.attributes = new HashMap<>();
 	}
 	
 	public <T> T getAttribute(String attributeName, Class<T> type) {
@@ -38,4 +41,12 @@ public class DatabaseEntry implements Serializable {
 		return database;
 	}
 	
+	public static DatabaseEntry generateFromItem(Item item, String database) {
+		DatabaseEntry newEntry = new DatabaseEntry(database);
+		for (Object itemId : item.getItemPropertyIds()) {
+			Property itemProperty = item.getItemProperty(itemId);
+			newEntry.addAttribute(itemId.toString(), itemProperty.getType(), itemProperty.getValue());
+		}
+		return newEntry;
+	}
 }

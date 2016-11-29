@@ -17,5 +17,7 @@ public interface SearchView extends CommonView {
 		String getProperty(String name);
 		
 		void initSearchrequst(String query);
+		
+		void rateMovie(Integer movieID, Double value);
 	}
 }

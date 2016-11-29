@@ -51,7 +51,7 @@ public class JDBCResult {
 	}
 	
 	public static JDBCResult createSuccess(JDBCTask query) {
-		return new JDBCResult(true, query, null, null);
+		return new JDBCResult(false, query, null, null);
 	}
 	
 	public static JDBCResult createFailure(JDBCTask query, Throwable ex) {

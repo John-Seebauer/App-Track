@@ -1,11 +1,18 @@
 package edu.illinois.web.search;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 import edu.illinois.logic.SearchView;
+import edu.illinois.util.DatabaseEntry;
 import edu.illinois.web.AbstractWebView;
+import edu.illinois.web.util.DialogBuilder;
+import edu.illinois.web.util.DialogType;
+import edu.illinois.web.util.YesNoCancelResult;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +35,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	
 	@Override
 	public void notifySELECTresponse(IndexedContainer container) {
-		changeContainer(container);
+		changeContainerWithHiddenId(container, Collections.singletonList("movie_id"));
 		progressBar.setVisible(false);
 	}
 	
@@ -52,51 +59,9 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		baseContainer.setMargin(true);
 		baseContainer.setSizeFull();
 		
-		
 		progressBar = new ProgressBar();
 		progressBar.setIndeterminate(true);
 		progressBar.setVisible(false);
-		
-		TextField movieInput = new TextField("Movie");
-		movieInput.setWidth("100%");
-		Button getActors = new Button("Get actors for movie");
-		getActors.addClickListener(event -> {
-			if (movieInput.getValue() != null) {
-				actionListener.initSearchrequst(String.format(
-						actionListener.getProperty("backend.GET_ACTORS_FOR_MOVIE"),
-						movieInput.getValue()));
-			}
-		});
-		
-		HorizontalLayout firstQuery = new HorizontalLayout();
-		firstQuery.setSpacing(true);
-		firstQuery.addComponent(movieInput);
-		firstQuery.addComponent(getActors);
-		firstQuery.setExpandRatio(getActors, 1.0f);
-		
-		TextField actorInput = new TextField("Actor name");
-		actorInput.setWidth("100%");
-		Button moviesForActor = new Button("Get movies actor is in");
-		moviesForActor.addClickListener(event -> {
-			if (actorInput.getValue() != null) {
-				String firstname = actorInput.getValue().split(" ")[0];
-				String lastname = actorInput.getValue().split(" ")[1];
-				actionListener.initSearchrequst(String.format(
-						actionListener.getProperty("backend.GET_MOVIES_FOR_ACTOR"),
-						lastname, firstname));
-			}
-		});
-		firstQuery.addComponent(actorInput);
-		firstQuery.addComponent(moviesForActor);
-		firstQuery.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
-		firstQuery.setExpandRatio(actorInput, 1.0f);
-		
-		HorizontalLayout secondQuery = new HorizontalLayout();
-		secondQuery.setSpacing(true);
-		secondQuery.addComponent(actorInput);
-		secondQuery.addComponent(moviesForActor);
-		secondQuery.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
-		secondQuery.setExpandRatio(actorInput, 1.0f);
 		
 		HorizontalLayout top = new HorizontalLayout();
 		TextField queryBar = new TextField();
@@ -118,9 +83,44 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		
 		databaseGrid = new Grid();
 		databaseGrid.setSizeFull();
+		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		
-		baseContainer.addComponent(firstQuery);
-		baseContainer.addComponent(secondQuery);
+		
+		
+		databaseGrid.addItemClickListener( listener -> {
+			if(listener.isDoubleClick()) {
+				Integer selectedRow = (Integer) databaseGrid.getSelectedRow();
+				Item selectedItem = databaseGrid.getContainerDataSource().getItem(selectedRow);
+				DatabaseEntry databaseEntry = DatabaseEntry.generateFromItem(selectedItem, actionListener.getProperty("Default_Database"));
+				
+				//Rating window
+				VerticalLayout ratingWindowLayout = new VerticalLayout();
+				Label ratingLabel = new Label("Rating for: " + databaseEntry.getAttribute("title", String.class));
+				
+				Slider rating = new Slider(0, 5, 0);
+				rating.setValue(3.0);
+				rating.addValueChangeListener( ratingValue -> {
+					rating.setValue(Math.ceil((Double) ratingValue.getProperty().getValue()));
+				});
+				rating.setWidth("100%");
+				
+				ratingWindowLayout.addComponent(ratingLabel);
+				ratingWindowLayout.addComponent(rating);
+				
+				ratingWindowLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+				
+				new DialogBuilder(ui, ratingWindowLayout, DialogType.INFO)
+						.height(3.5f, Unit.INCH)
+						.width(4.0f, Unit.INCH)
+						.resultConsumer( yesNoCancelResult -> {
+							if(YesNoCancelResult.YES.equals(yesNoCancelResult)) {
+								actionListener.rateMovie(databaseEntry.getAttribute("movie_id", Integer.class), rating.getValue());
+							}
+						})
+						.display();
+			}
+		});
+		
 		baseContainer.addComponent(top);
 		baseContainer.addComponent(databaseGrid);
 		baseContainer.setExpandRatio(databaseGrid, 1.0f);
@@ -133,6 +133,21 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 			ui.access( () -> {
 				databaseGrid.removeAllColumns();
 				databaseGrid.setContainerDataSource(container);
+			});
+		}
+	}
+	
+	private void changeContainerWithHiddenId(IndexedContainer container, Collection<String> hiddenTitles) {
+		if (container != null) {
+			ui.access( () -> {
+				databaseGrid.removeAllColumns();
+				databaseGrid.setContainerDataSource(container);
+				for (Grid.Column column : databaseGrid.getColumns()) {
+					if(hiddenTitles.contains(column.getPropertyId())) {
+						column.setHidden(true);
+						column.setHidable(false);
+					}
+				}
 			});
 		}
 	}
