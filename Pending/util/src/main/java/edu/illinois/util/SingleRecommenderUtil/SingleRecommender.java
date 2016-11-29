@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  */
 public class SingleRecommender {
 	
-	HashMap<String, List<Pair<Integer, Float>>> dataset;
-	List<String> users;
+	private HashMap<String, List<Pair<Integer, Float>>> dataset;
+	private List<String> users;
 	
 	/**
 	 * @param dataset "username" : [(movieIDs, ratings)]
