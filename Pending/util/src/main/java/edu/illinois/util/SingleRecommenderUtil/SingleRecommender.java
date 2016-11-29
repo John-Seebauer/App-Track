@@ -9,6 +9,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * SELECT user.name, rating.movieID, rating.ratingID
+ * FROM user, ratings
+ * WHERE user.userID = rating.userID
+ *
+ * Index by a test user, and potentially for speed only get users around the user
+ *
  * Created by Erik on 11/25/16.
  */
 public class SingleRecommender {
