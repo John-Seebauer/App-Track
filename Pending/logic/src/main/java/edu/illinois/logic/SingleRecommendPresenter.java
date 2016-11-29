@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 public class SingleRecommendPresenter<V extends SingleRecommendView, M extends SingleRecommendModel> extends CommonPresenter<V,M>
 	implements  SingleRecommendView.ActionListener {
 	private final static Logger logger = Logger.getLogger(SingleRecommendPresenter.class.getName());
-
+	public void setupRecommendationEngine(){}
+	public void getRecommendation(){}
 
 }
