@@ -70,7 +70,7 @@ public class MainUI extends HorizontalLayout {
 		
 		final Navigator menuNavigator = new Navigator(ui, navContainer);
 		menuNavigator.setErrorView(WebErrorView.class);
-		menu = new NavigationMenu(menuNavigator);
+		menu = new NavigationMenu(menuNavigator, username);
 		try {
 			createViews(menu, username);
 		} catch (IllegalAccessException | InstantiationException e) {
