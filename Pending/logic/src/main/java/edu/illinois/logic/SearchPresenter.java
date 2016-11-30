@@ -36,7 +36,7 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 		String updateQuery = model.getProperty("SAVE_RATING");
 		String user = model.getUser();
 		int rating = value.intValue();
-		model.runUPDATEquery(String.format(updateQuery, user, movieID, user, movieID, rating, rating, user, movieID ));
+		model.runUPDATEquery(String.format(updateQuery, user, movieID, rating, rating));
 	}
 	
 	@Override
