@@ -56,7 +56,7 @@ public class LoginPresenter<V extends LoginView, M extends LoginModel> extends C
 			}
 		}
 		
-		view.showMessage("Unknown user: " + usernamePasswordMatches.iterator().next().getOne());
+		view.showMessage("Unknown user.");
 	}
 	
 	public void loginUser(String username) {
