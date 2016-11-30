@@ -31,7 +31,7 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 			showMessage("You selected " + box.getValue() + " but recommendations are not yet implemented.");
 		});
 		Button getRecsButton = new Button("Recommend something for me!");
-	//	getRecsButton.addClickListener(clickEvent -> );
+//		getRecsButton.addClickListener(clickEvent -> {});
 		setSpacing(true);
 		setMargin(true);
 		addComponent(box);
