@@ -63,8 +63,12 @@ public class StorageService {
 	}
 	
 	public void runUPDATEquery(String query, boolean large, Consumer<JDBCResult> successAction, Consumer<JDBCResult> failureAction) {
+		runUPDATEquery(query, large, successAction, failureAction, null);
+	}
+	
+	public void runUPDATEquery(String query, boolean large, Consumer<JDBCResult> successAction, Consumer<JDBCResult> failureAction, Object additionalArgs) {
 		try {
-			JDBCTask task = JDBCTask.createUpdateQuery(query, large);
+			JDBCTask task = JDBCTask.createUpdateQuery(query, large, additionalArgs);
 			task.setSuccessAction(successAction);
 			task.setFailureAction(failureAction);
 			backgroundThread.addTask(task);

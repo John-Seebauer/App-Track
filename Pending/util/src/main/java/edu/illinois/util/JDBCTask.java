@@ -59,6 +59,10 @@ public class JDBCTask {
 		return new JDBCTask(TaskType.UPDATE, query, large, null);
 	}
 	
+	public static JDBCTask createUpdateQuery(String query, boolean large, Object additionalArgs) {
+		return new JDBCTask(TaskType.UPDATE, query, large, additionalArgs);
+	}
+	
 	public static JDBCTask createSelectQueryWithAdditionalArgs(String query, Object supplemental) {
 		return new JDBCTask(TaskType.SELECT, query, false, supplemental);
 	}
