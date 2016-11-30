@@ -28,7 +28,13 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	
 	@Override
 	public void initSearchrequst(String query) {
-		model.runSELECTquery(query);
+		model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE"), query));
+	}
+	
+	@Override
+	public void rateMovie(Integer movieID, Double value) {
+		String updateQuery = model.getProperty("SAVE_RATING");
+		model.runUPDATEquery(String.format(updateQuery, model.getUser(), movieID, value.intValue()));
 	}
 	
 	@Override

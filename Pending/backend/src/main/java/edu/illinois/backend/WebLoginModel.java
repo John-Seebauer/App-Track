@@ -39,9 +39,9 @@ public class WebLoginModel extends WebCommonModel implements LoginModel {
 	}
 	
 	@Override
-	public void addNewUser(String name, String username, String password, String language) {
+	public void addNewUser(String name, String username, String password) {
 		storageService.runUPDATEquery(String.format(getProperty("backend.ADD_NEW_USER"),
-				name, username, password, language), false, this::newUserAccepted, null);
+				name, username, password), false, this::newUserAccepted, null);
 	}
 	
 	@Override

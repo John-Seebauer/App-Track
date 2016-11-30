@@ -59,9 +59,6 @@ public class WebLoginView extends Window implements LoginView {
 			Label passwordLabel = new Label("Password");
 			PasswordField passwordField = new PasswordField();
 			passwordField.setImmediate(true);
-			Label languageLabel = new Label("Language");
-			TextField languageField = new TextField();
-			
 			
 			loginLayout.addComponent(nameLabel);
 			loginLayout.addComponent(nameField);
@@ -69,15 +66,13 @@ public class WebLoginView extends Window implements LoginView {
 			loginLayout.addComponent(usernameField);
 			loginLayout.addComponent(passwordLabel);
 			loginLayout.addComponent(passwordField);
-			loginLayout.addComponent(languageLabel);
-			loginLayout.addComponent(languageField);
 			
 			new DialogBuilder(ui, loginLayout, DialogType.INFO)
 				.showCancel()
 				.resultConsumer( consumer -> {
 					if(YesNoCancelResult.YES.equals(consumer)) {
 						actionListener.addNewUser(nameField.getValue(), usernameField.getValue(),
-							passwordField.getValue(), languageField.getValue());
+							passwordField.getValue());
 					}
 				})
 				.display();
@@ -91,6 +86,10 @@ public class WebLoginView extends Window implements LoginView {
 			String passwordText = password.getValue();
 			actionListener.authenticate(username.getValue(), passwordText);
 		});
+		
+		username.setTabIndex(1);
+		password.setTabIndex(2);
+		username.focus();
 		
 		loginBox.addComponent(username);
 		loginBox.addComponent(password);

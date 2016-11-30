@@ -11,7 +11,7 @@ import java.util.List;
 public interface LoginModel extends CommonModel {
 	
 	void authenticateUser(String username, String password);
-	void addNewUser(String name, String username, String password, String language);
+	void addNewUser(String name, String username, String password);
 	
 	void newUserAccepted(JDBCResult result);
 	

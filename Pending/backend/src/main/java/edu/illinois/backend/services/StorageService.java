@@ -78,14 +78,10 @@ public class StorageService {
 		logger.info("Received result for query " + result.getOriginalQuery().getQuery());
 		if (result.hadFailure()) {
 			Optional<Consumer<JDBCResult>> possibleFailureAction = result.getOriginalQuery().getFailureAction();
-			if (possibleFailureAction.isPresent()) {
-				possibleFailureAction.get().accept(result);
-			}
+			possibleFailureAction.ifPresent(jdbcResultConsumer -> jdbcResultConsumer.accept(result));
 		} else {
 			Optional<Consumer<JDBCResult>> possibleSuccessAction = result.getOriginalQuery().getSuccessAction();
-			if (possibleSuccessAction.isPresent()) {
-				possibleSuccessAction.get().accept(result);
-			}
+			possibleSuccessAction.ifPresent(jdbcResultConsumer -> jdbcResultConsumer.accept(result));
 			
 		}
 	}

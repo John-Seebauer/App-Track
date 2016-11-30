@@ -72,7 +72,7 @@ public class MainUI extends HorizontalLayout {
 		menuNavigator.setErrorView(WebErrorView.class);
 		menu = new NavigationMenu(menuNavigator);
 		try {
-			createViews(menu);
+			createViews(menu, username);
 		} catch (IllegalAccessException | InstantiationException e) {
 			logger.log(Level.SEVERE, "Could not create Views!", e);
 		}
@@ -98,7 +98,7 @@ public class MainUI extends HorizontalLayout {
 		menuNavigator.navigateTo("Search");
 	}
 	
-	private void createViews(NavigationMenu menu) throws IllegalAccessException, InstantiationException {
+	private void createViews(NavigationMenu menu, String username) throws IllegalAccessException, InstantiationException {
 		for(ViewTypes item : ViewTypes.values()) {
 			AbstractWebView view = (AbstractWebView) item.viewType.newInstance();
 			WebCommonModel model = null;
@@ -106,6 +106,7 @@ public class MainUI extends HorizontalLayout {
 				model = (WebCommonModel) item.modelType.newInstance();
 				CommonPresenter presenter = (CommonPresenter) item.presenterType.newInstance();
 				presenter.init(view, model);
+				model.setUser(username);
 			}
 			
 			view.init(ui);

@@ -27,8 +27,8 @@ public class LoginPresenter<V extends LoginView, M extends LoginModel> extends C
 	}
 	
 	@Override
-	public void addNewUser(String name, String username, String password, String language) {
-		model.addNewUser(name, username, password, language);
+	public void addNewUser(String name, String username, String password) {
+		model.addNewUser(name, username, password);
 	}
 	
 	@Override
