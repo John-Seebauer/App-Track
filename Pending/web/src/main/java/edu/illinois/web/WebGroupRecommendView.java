@@ -1,8 +1,10 @@
 package edu.illinois.web;
 
+import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
+import edu.illinois.logic.GroupRecommendView;
+import edu.illinois.logic.SearchView;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -13,6 +15,15 @@ import java.util.logging.Logger;
 public class WebGroupRecommendView extends AbstractWebView {
 	private final static Logger logger = Logger.getLogger(WebGroupRecommendView.class.getName());
 	
+	private Grid databaseGrid;
+	
+	private GroupRecommendView.ActionListener actionListener;
+	
+	public void setActionListener(GroupRecommendView.ActionListener actionListener) {
+		this.actionListener = actionListener;
+	}
+	
+	
 	@Override
 	public void init(UI ui) {
 		this.ui = ui;
@@ -21,16 +32,50 @@ public class WebGroupRecommendView extends AbstractWebView {
 	}
 	
 	private void setupView() {
-		ComboBox box = new ComboBox("Genre");
-		for(String item : Arrays.asList("Comedy", "Drama", "Horror", "Romance")) {
-			box.addItem(item);
-		}
-		box.addValueChangeListener( event -> {
-			showMessage("You selected " + box.getValue() + " but recommendations are not yet implemented.");
+		
+		VerticalLayout vl = new VerticalLayout();
+		
+		Label label = new Label("Enter users separated by commas");
+		
+		TextField usersInput = new TextField();
+		usersInput.setWidth("100%");
+		Button findMoviesForAllUsers = new Button("Find movies!");
+		
+		findMoviesForAllUsers.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(Button.ClickEvent clickEvent) {
+				String usersStr = usersInput.getValue();
+				String[] users = usersStr.split(",");
+				
+				//FreeformQuery query = new FreeformQuery("SELECT * FROM User",);
+			}
+			
 		});
-		setSpacing(true);
-		setMargin(true);
-		addComponent(box);
+		
+		HorizontalLayout firstQuery = new HorizontalLayout();
+		firstQuery.setSpacing(true);
+		firstQuery.addComponent(usersInput);
+		firstQuery.addComponent(findMoviesForAllUsers);
+		firstQuery.setExpandRatio(findMoviesForAllUsers, 1.0f);
+		
+		databaseGrid = new Grid();
+		databaseGrid.setSizeFull();
+		
+		vl.addComponent(label);
+		vl.addComponent(firstQuery);
+		vl.addComponent(databaseGrid);
+		
+
+		
+		VerticalLayout baseContainer = new VerticalLayout();
+		baseContainer.setSpacing(true);
+		baseContainer.setMargin(true);
+		baseContainer.setSizeFull();
+		
+		baseContainer.addComponent(vl);
+		
+		addComponent(baseContainer);
+		
 	}
 	
 	@Override
