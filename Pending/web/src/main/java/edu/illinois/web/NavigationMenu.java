@@ -22,20 +22,25 @@ public class NavigationMenu extends CssLayout {
 	private final CssLayout menuLayoutList;
 	private final Map<String, Button> buttonNameRefs;
 	
-	public NavigationMenu(Navigator navigator) {
+	public NavigationMenu(Navigator navigator, String username) {
 		this.navigator = navigator;
 		setPrimaryStyleName(ValoTheme.MENU_ROOT);
 		menuContainer = new CssLayout();
 		menuContainer.addStyleName(ValoTheme.MENU_PART_LARGE_ICONS);
 		
-		final HorizontalLayout buttonLayout = new HorizontalLayout();
+		final VerticalLayout buttonLayout = new VerticalLayout();
 		buttonLayout.setSpacing(true);
 		buttonLayout.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
 		buttonLayout.addStyleName(ValoTheme.MENU_TITLE);
 		Label title = new Label("Movie Matcher", ContentMode.TEXT);
-		title.addStyleName(ValoTheme.LABEL_H2);
+		title.addStyleName(ValoTheme.LABEL_H1);
 		title.setSizeUndefined();
 		buttonLayout.addComponent(title);
+		
+		Label welcome = new Label("Welcome, " + username);
+		welcome.addStyleName(ValoTheme.LABEL_H3);
+		welcome.setSizeUndefined();
+		buttonLayout.addComponent(welcome);
 		menuContainer.addComponent(buttonLayout);
 		
 		menuLayoutList = new CssLayout();

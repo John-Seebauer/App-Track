@@ -43,6 +43,10 @@ public class BaseUI extends UI {
 	    loginWindow.setWidth("70%");
 	    loginWindow.setHeight("70%");
 	    UI.getCurrent().setErrorHandler(new UncaughtExceptionDialog());
+	    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+		    //Run thread when exiting
+		    logger.log(Level.SEVERE, "System is exiting!");
+	    }));
 	    try {
 		    WebLoginModel model = WebLoginModel.class.newInstance();
 		    LoginPresenter<LoginView, LoginModel> presenter = new LoginPresenter<>();

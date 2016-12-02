@@ -1,4 +1,4 @@
-package edu.illinois.util.SingleRecommenderUtil;
+package edu.illinois.logic.SingleRecommender;
 
 import edu.illinois.util.Pair;
 
@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
  */
 public class SingleRecommender {
 	
-	HashMap<String, List<Pair<Integer, Float>>> dataset;
-	List<String> users;
+	private HashMap<String, List<Pair<Integer, Float>>> dataset;
+	private List<String> users;
 	
 	/**
 	 * @param dataset "username" : [(movieIDs, ratings)]
@@ -121,7 +121,7 @@ public class SingleRecommender {
 					continue;
 				}
 				
-				if (recommendedMoviesRec.containsKey(movieRating.getOne())) {
+				if (!recommendedMoviesRec.containsKey(movieRating.getOne())) {
 					recommendedMoviesRec.put(movieRating.getOne(), movieRating.getTwo());
 					recommendedMoviesN.put(movieRating.getOne(), 1);
 				} else {

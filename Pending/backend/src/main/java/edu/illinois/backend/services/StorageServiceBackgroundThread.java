@@ -20,7 +20,7 @@ public class StorageServiceBackgroundThread implements Runnable {
 	private final static String superuser = "SUPER_USER";
 	private final static String defaultUser = "USER";
 	private final static String defaultPassword = "PASSWORD";
-	private final static String defaultDatabase = "MOVIE_MATCHER";
+	private static String defaultDatabase = "MOVIE_MATCHER";
 	
 	
 	private boolean askedToTerminate = false;
@@ -40,6 +40,10 @@ public class StorageServiceBackgroundThread implements Runnable {
 	
 	private StorageServiceBackgroundThread(EventBus bus) throws SQLException {
 		this.bus = bus;
+		String databaseName = ConfigurationService.getInstance().getProperty("Default_Database");
+		if(databaseName != null) {
+			defaultDatabase = databaseName;
+		}
 		init();
 	}
 	

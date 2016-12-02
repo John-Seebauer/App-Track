@@ -63,8 +63,12 @@ public class StorageService {
 	}
 	
 	public void runUPDATEquery(String query, boolean large, Consumer<JDBCResult> successAction, Consumer<JDBCResult> failureAction) {
+		runUPDATEquery(query, large, successAction, failureAction, null);
+	}
+	
+	public void runUPDATEquery(String query, boolean large, Consumer<JDBCResult> successAction, Consumer<JDBCResult> failureAction, Object additionalArgs) {
 		try {
-			JDBCTask task = JDBCTask.createUpdateQuery(query, large);
+			JDBCTask task = JDBCTask.createUpdateQuery(query, large, additionalArgs);
 			task.setSuccessAction(successAction);
 			task.setFailureAction(failureAction);
 			backgroundThread.addTask(task);
@@ -78,14 +82,10 @@ public class StorageService {
 		logger.info("Received result for query " + result.getOriginalQuery().getQuery());
 		if (result.hadFailure()) {
 			Optional<Consumer<JDBCResult>> possibleFailureAction = result.getOriginalQuery().getFailureAction();
-			if (possibleFailureAction.isPresent()) {
-				possibleFailureAction.get().accept(result);
-			}
+			possibleFailureAction.ifPresent(jdbcResultConsumer -> jdbcResultConsumer.accept(result));
 		} else {
 			Optional<Consumer<JDBCResult>> possibleSuccessAction = result.getOriginalQuery().getSuccessAction();
-			if (possibleSuccessAction.isPresent()) {
-				possibleSuccessAction.get().accept(result);
-			}
+			possibleSuccessAction.ifPresent(jdbcResultConsumer -> jdbcResultConsumer.accept(result));
 			
 		}
 	}
