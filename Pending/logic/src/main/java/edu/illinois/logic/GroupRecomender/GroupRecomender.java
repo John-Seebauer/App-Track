@@ -3,7 +3,6 @@ package edu.illinois.logic.GroupRecomender;
 import edu.illinois.util.Pair;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -15,6 +14,10 @@ public class GroupRecomender {
 	final Float C2 = 0.2f;
 	final int LIMIT =3;
 
+	/***
+	 *
+	 * @param dataset of the format [username, [(MovieID, rating)]]
+	 */
 	public GroupRecomender(List<Pair<String, List<Pair<Integer, Float>>>> dataset) {
 		this.dataset = dataset;
 
@@ -23,7 +26,7 @@ public class GroupRecomender {
 	/***
 	 * Could be modified to take a genere or other options
 	 *
-	 * @return
+	 * @return MovieID of recomended movies
 	 */
 	public Integer getGroupRecomendations() {
 		PriorityQueue<Pair<Integer,Float>> mrCue = getRatingsQueue(LIMIT);
@@ -59,8 +62,8 @@ public class GroupRecomender {
 
 	public PriorityQueue<Pair<Integer,Float>> getRatingsQueue(int limit) {
 		Comparator<Pair<Integer,Float>> comparator = new ratingCompatator();
-		PriorityQueue<Pair<Integer,Float>> retQ = new PriorityQueue(limit*dataset.size(), comparator);
-		Set<Integer> addedSet = new HashSet<Integer>();
+		PriorityQueue retQ = new PriorityQueue(limit*dataset.size(), comparator);
+		Set<Integer> addedSet = new HashSet<>();
 		Pair<Integer,Float> current;
 		for(int j = 0; j< limit; j++) {
 			for(int i=0;i<dataset.size(); i++) {
