@@ -1,5 +1,6 @@
 package edu.illinois.logic.GroupRecomender;
 
+import edu.illinois.logic.SingleRecommender.SingleRecommender;
 import edu.illinois.util.Pair;
 
 import java.util.*;
@@ -20,6 +21,13 @@ public class GroupRecomender {
 	 */
 	public GroupRecomender(List<Pair<String, List<Pair<Integer, Float>>>> dataset) {
 		this.dataset = dataset;
+
+	}
+
+	public GroupRecomender(SingleRecommender engine,List<String> users) {
+		this.dataset = users.stream().map(user -> {
+			return new Pair<String, List<Pair<Integer,Float>>>(user, engine.getRecommendations(user));
+		}).collect(Collectors.toList());
 
 	}
 

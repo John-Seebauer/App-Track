@@ -95,9 +95,10 @@ public class SingleRecommender {
 	 * @param user to get ratings for
 	 * @return a list of (movieID, probability of enjoyment)
 	 */
-	public List<Pair<Integer, Float>> getRecommendations(String user) throws Exception {
+	public List<Pair<Integer, Float>> getRecommendations(String user) {
 		if (!dataset.containsKey(user)) {
-			throw (new Exception("User does not exist"));
+			//throw (new Exception("User does not exist"));
+			return null;
 		}
 		
 		HashMap<Integer, Float> recommendedMoviesRec = new HashMap<>();
