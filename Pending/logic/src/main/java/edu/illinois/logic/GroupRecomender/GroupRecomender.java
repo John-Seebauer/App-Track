@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
  * Created by admin on 12/3/16.
  */
 public class GroupRecomender {
-	List<Pair<String, List<Pair<Integer, Float>>>> dataset;
-	final Float C1 = 0.2f;
-	final Float C2 = 0.2f;
-	final int LIMIT =3;
+	private List<Pair<String, List<Pair<Integer, Float>>>> dataset;
+	private final Float C1 = 0.2f;
+	private final Float C2 = 0.2f;
+	private final int LIMIT =3;
 
 	/***
 	 *
@@ -25,9 +25,7 @@ public class GroupRecomender {
 	}
 
 	public GroupRecomender(SingleRecommender engine,List<String> users) {
-		this.dataset = users.stream().map(user -> {
-			return new Pair<String, List<Pair<Integer,Float>>>(user, engine.getRecommendations(user));
-		}).collect(Collectors.toList());
+		this.dataset = users.stream().map(user -> new Pair<>(user, engine.getRecommendations(user))).collect(Collectors.toList());
 
 	}
 
