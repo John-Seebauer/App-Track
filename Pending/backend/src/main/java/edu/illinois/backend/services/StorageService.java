@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 public class StorageService {
 	private final static Logger logger = Logger.getLogger(StorageService.class.getName());
 	private static StorageService service;
-	private StorageServiceBackgroundThread backgroundThread;
 	private EventBus bus;
 	
 	
@@ -42,7 +41,6 @@ public class StorageService {
 		ConfigurationService.getInstance().reloadProperties();
 		bus = new EventBus();
 		bus.register(this);
-		backgroundThread = StorageServiceBackgroundThread.create(bus);
 	}
 	
 	public void runSELECTquery(String query, Consumer<JDBCResult> successAction, Consumer<JDBCResult> failureAction) {
@@ -56,8 +54,8 @@ public class StorageService {
 					JDBCTask.createSelectQuery(query) : JDBCTask.createSelectQueryWithAdditionalArgs(query, additionalArgs);
 			task.setSuccessAction(successAction);
 			task.setFailureAction(failureAction);
-			backgroundThread.addTask(task);
-		} catch (InterruptedException e) {
+			StorageServiceBackgroundThread.getInstance(bus).addTask(task);
+		} catch (InterruptedException | SQLException e) {
 			logger.log(Level.FINE, "Could not add task to queue: " + query, e);
 		}
 	}
@@ -71,8 +69,8 @@ public class StorageService {
 			JDBCTask task = JDBCTask.createUpdateQuery(query, large, additionalArgs);
 			task.setSuccessAction(successAction);
 			task.setFailureAction(failureAction);
-			backgroundThread.addTask(task);
-		} catch (InterruptedException e) {
+			StorageServiceBackgroundThread.getInstance(bus).addTask(task);
+		} catch (InterruptedException | SQLException e) {
 			logger.log(Level.FINE, "Could not add task to queue: " + query, e);
 		}
 	}

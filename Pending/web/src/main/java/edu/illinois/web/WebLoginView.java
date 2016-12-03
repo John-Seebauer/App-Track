@@ -144,4 +144,14 @@ public class WebLoginView extends Window implements LoginView {
 	public void enter(ViewChangeListener.ViewChangeEvent event) {
 		ui.access( () -> ui.getPage().setTitle(event.getViewName()));
 	}
+	
+	@Override
+	public void showNotification(String title, String description) {
+		Notification.show(title, description, Notification.Type.HUMANIZED_MESSAGE);
+	}
+	
+	@Override
+	public void showNotification(String description) {
+		Notification.show(description);
+	}
 }

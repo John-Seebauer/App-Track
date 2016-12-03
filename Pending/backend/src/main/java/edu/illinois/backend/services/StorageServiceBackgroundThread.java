@@ -28,8 +28,17 @@ public class StorageServiceBackgroundThread implements Runnable {
 	private Connection connect;
 	private EventBus bus;
 	private Statement statement;
+	private static StorageServiceBackgroundThread workingCopy;
 	
-	public static StorageServiceBackgroundThread create(EventBus bus) throws SQLException {
+	public static StorageServiceBackgroundThread getInstance(EventBus bus) throws SQLException {
+		if (workingCopy == null) {
+			workingCopy = create(bus);
+		}
+		return workingCopy;
+	}
+	
+	
+	private static StorageServiceBackgroundThread create(EventBus bus) throws SQLException {
 		StorageServiceBackgroundThread background = new StorageServiceBackgroundThread(bus);
 		Thread backgroundThread = new Thread(background);
 		backgroundThread.setName("StorageServiceBackgroundThread");
@@ -68,9 +77,14 @@ public class StorageServiceBackgroundThread implements Runnable {
 					"%s had an uncaught exception: %s", thread.getName(), throwable.getLocalizedMessage()),  throwable);
 			logger.info("Restarting StorageService background thread.");
 			try {
-				create(bus);
+				workingCopy = create(bus);
 			} catch (SQLException e) {
 				logger.log(Level.SEVERE, "Could not restart StorageService background thread!", e);
+			}
+			try {
+				Thread.currentThread().join();
+			} catch (InterruptedException e) {
+				logger.log(Level.WARNING, "Could not shut down failing thread!", e);
 			}
 		});
 		while (!askedToTerminate) {

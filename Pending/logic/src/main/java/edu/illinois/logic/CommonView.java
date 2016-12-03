@@ -12,4 +12,8 @@ public interface CommonView extends View {
 	void showMessage(String message);
 	void showError(Throwable error);
 	void showAndLogError(Logger log, Level level, String message, Throwable error);
+	
+	void showNotification(String message);
+	
+	void showNotification(String title, String description);
 }

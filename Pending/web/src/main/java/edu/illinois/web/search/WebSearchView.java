@@ -92,32 +92,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 				Integer selectedRow = (Integer) databaseGrid.getSelectedRow();
 				Item selectedItem = databaseGrid.getContainerDataSource().getItem(selectedRow);
 				DatabaseEntry databaseEntry = DatabaseEntry.generateFromItem(selectedItem, actionListener.getProperty("Default_Database"));
-				
-				//Rating window
-				VerticalLayout ratingWindowLayout = new VerticalLayout();
-				Label ratingLabel = new Label("Rating for: " + databaseEntry.getAttribute("title", String.class));
-				
-				Slider rating = new Slider(0, 5, 0);
-				rating.setValue(3.0);
-				rating.addValueChangeListener( ratingValue -> {
-					rating.setValue(Math.ceil((Double) ratingValue.getProperty().getValue()));
-				});
-				rating.setWidth("100%");
-				
-				ratingWindowLayout.addComponent(ratingLabel);
-				ratingWindowLayout.addComponent(rating);
-				
-				ratingWindowLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-				
-				new DialogBuilder(ui, ratingWindowLayout, DialogType.INFO)
-						.height(3.5f, Unit.INCH)
-						.width(4.0f, Unit.INCH)
-						.resultConsumer( yesNoCancelResult -> {
-							if(YesNoCancelResult.YES.equals(yesNoCancelResult)) {
-								actionListener.rateMovie(databaseEntry.getAttribute("movie_id", Integer.class), rating.getValue());
-							}
-						})
-						.display();
+				actionListener.initRatingWindow(databaseEntry);
 			}
 		});
 		
@@ -154,5 +129,44 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	
 	public void queryFailedCleanup() {
 		ui.access( () -> progressBar.setVisible(false));
+	}
+	
+	@Override
+	public void displayRatingWindow(String name, String genre, String plot, Integer movie_id) {
+		//Rating window
+		VerticalLayout ratingWindowLayout = new VerticalLayout();
+		ratingWindowLayout.setSizeFull();
+		
+		Label genreLabel = new Label("Genre: " + genre);
+		TextArea plotArea = new TextArea();
+		plotArea.setWordwrap(true);
+		plotArea.setValue(plot);
+		plotArea.setReadOnly(true);
+		plotArea.setSizeFull();
+		
+		Slider rating = new Slider(0, 5, 0);
+		rating.setValue(3.0);
+		rating.addValueChangeListener(ratingValue -> rating.setValue(Math.ceil((Double) ratingValue.getProperty().getValue())));
+		rating.setWidth("100%");
+		
+		ratingWindowLayout.addComponent(genreLabel);
+		ratingWindowLayout.addComponent(rating);
+		ratingWindowLayout.addComponent(plotArea);
+		ratingWindowLayout.setSizeFull();
+		ratingWindowLayout.setExpandRatio(plotArea, 1.0f);
+		
+		ratingWindowLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+		
+		new DialogBuilder(ui, ratingWindowLayout, DialogType.INFO)
+				.title("Rating for: " + name)
+				.height(50f, Unit.PERCENTAGE)
+				.width(4.0f, Unit.INCH)
+				.showCancel()
+				.resultConsumer(yesNoCancelResult -> {
+					if (YesNoCancelResult.YES.equals(yesNoCancelResult)) {
+						actionListener.rateMovie(movie_id, rating.getValue(), name);
+					}
+				})
+				.display();
 	}
 }

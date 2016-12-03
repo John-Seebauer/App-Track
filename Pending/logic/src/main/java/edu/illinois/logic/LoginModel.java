@@ -20,5 +20,7 @@ public interface LoginModel extends CommonModel {
 	interface ActionListener {
 		void authenticateUserResponse(List<Pair<String, String>> usernamePasswordMatches, String password);
 		void loginUser(String username);
+		
+		void unableToCreateUser(String username);
 	}
 }

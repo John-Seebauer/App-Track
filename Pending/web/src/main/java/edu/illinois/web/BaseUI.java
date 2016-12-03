@@ -37,6 +37,7 @@ public class BaseUI extends UI {
 			    getNavigator().navigateTo(getNavigator().getState());
 			    logger.info("Base created the Main UI.");
 		    });
+		    getUI().push();
 	    });
 	    loginWindow.center();
 	    setSizeFull();

@@ -63,6 +63,11 @@ public class LoginPresenter<V extends LoginView, M extends LoginModel> extends C
 		view.loginUser(username);
 	}
 	
+	@Override
+	public void unableToCreateUser(String username) {
+		view.showMessage("Could not create user " + username);
+	}
+	
 	private String generateHash(String password) throws NoSuchAlgorithmException {
 		MessageDigest digest = MessageDigest.getInstance(model.getProperty("PASSWORD_HASH_ALGORITHM"));
 		byte[] hashedBytes = digest.digest(password.getBytes());

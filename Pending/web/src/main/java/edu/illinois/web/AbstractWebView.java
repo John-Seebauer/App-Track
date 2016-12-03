@@ -1,10 +1,7 @@
 package edu.illinois.web;
 
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import edu.illinois.logic.CommonView;
 import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
@@ -57,5 +54,13 @@ public abstract class AbstractWebView extends VerticalLayout implements CommonVi
 	public void showAndLogError(Logger log, Level level, String message, Throwable error) {
 		log.log(level, message, error);
 		showError(error);
+	}
+	
+	public void showNotification(String title, String description) {
+		Notification.show(title, description, Notification.Type.HUMANIZED_MESSAGE);
+	}
+	
+	public void showNotification(String description) {
+		Notification.show(description);
 	}
 }

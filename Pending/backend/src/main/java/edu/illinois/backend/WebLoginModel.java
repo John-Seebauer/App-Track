@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -42,7 +43,7 @@ public class WebLoginModel extends WebCommonModel implements LoginModel {
 	@Override
 	public void addNewUser(String name, String username, String password) {
 		storageService.runUPDATEquery(String.format(getProperty("backend.ADD_NEW_USER"),
-				name, username, password), false, this::newUserAccepted, null,
+				name, username, password), false, this::newUserAccepted, this::newUserRejected,
 				Arrays.asList(username, password));
 	}
 	
@@ -56,6 +57,17 @@ public class WebLoginModel extends WebCommonModel implements LoginModel {
 			}
 		}
 	}
+	
+	public void newUserRejected(JDBCResult result) {
+		if (!result.hadFailure()) {
+			logger.log(Level.CONFIG, "Failure called but not set in result", result);
+		} else {
+			result.getOriginalQuery().getAdditionalArgs().ifPresent(name -> logger.log(Level.FINEST, "Unable to create user " + ((List) name).get(0)));
+			result.getOriginalQuery().getAdditionalArgs().ifPresent(name -> actionListener.unableToCreateUser((String) ((List) name).get(0)));
+		}
+	}
+	
+	
 	@Override
 	public void setActionListener(ActionListener actionListener) {
 		this.actionListener = actionListener;
