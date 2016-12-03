@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by admin on 12/3/16.
+ * Created by Erik on 12/3/16.
  */
 public class GroupRecomender {
 	private List<Pair<String, List<Pair<Integer, Float>>>> dataset;
@@ -93,7 +93,7 @@ public class GroupRecomender {
 
 	    List<Float> rList = dataset.stream().flatMap( user ->
 				user.getTwo().stream()
-				.filter(mr -> mr.getOne()==movieID)
+				.filter(mr -> Objects.equals(mr.getOne(),movieID))
 				.map(mr -> mr.getTwo())
 	    ).sorted(Collections.reverseOrder())
 			    .collect(Collectors.toList());
