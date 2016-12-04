@@ -87,6 +87,7 @@ public class SingleRecommender {
 					}
 				})
 				.collect(Collectors.toList());
+		simUsers.forEach(p -> System.out.println(p.getOne()+":"+p.getTwo()));
 		return simUsers;
 	}
 	
@@ -97,6 +98,7 @@ public class SingleRecommender {
 	 */
 	public List<Pair<Integer, Float>> getRecommendations(String user) {
 		if (!dataset.containsKey(user)) {
+
 			//throw (new Exception("User does not exist"));
 			return null;
 		}
@@ -137,6 +139,7 @@ public class SingleRecommender {
 		List<Pair<Integer, Float>> weightedRecs = recommendedMoviesRec.keySet().stream()
 				.map(movieID -> {
 					Float rec = recommendedMoviesRec.get(movieID);
+					System.out.println(movieID+":"+rec);
 					Float N = (float) recommendedMoviesN.get(movieID);
 					return new Pair<>(movieID, rec / N);
 				})
