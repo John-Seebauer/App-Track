@@ -34,4 +34,5 @@ public class WebGroupRecommendModel extends WebCommonModel implements GroupRecom
 	public void setActionListener(ActionListener actionListener) {
 		this.actionListener = actionListener;
 	}
+
 }

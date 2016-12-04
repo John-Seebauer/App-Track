@@ -45,4 +45,5 @@ public class Triple<T1, T2, T3> {
 	public int hashCode() {
 		return Objects.hash(arg1, arg2, arg3);
 	}
+
 }

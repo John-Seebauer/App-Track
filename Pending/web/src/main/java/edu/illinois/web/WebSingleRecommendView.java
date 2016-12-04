@@ -14,7 +14,8 @@ import java.util.logging.Logger;
  */
 public class WebSingleRecommendView extends AbstractWebView implements SingleRecommendView {
 	private final static Logger logger = Logger.getLogger(WebSingleRecommendView.class.getName());
-	
+
+	private SingleRecommendView.ActionListener actionListener;
 	@Override
 	public void init(UI ui) {
 		this.ui = ui;
@@ -31,7 +32,9 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 			showMessage("You selected " + box.getValue() + " but recommendations are not yet implemented.");
 		});
 		Button getRecsButton = new Button("Recommend something for me!");
-//		getRecsButton.addClickListener(clickEvent -> {});
+		getRecsButton.addClickListener(clickEvent -> {
+			actionListener.setupRecommendationEngine();
+		});
 		setSpacing(true);
 		setMargin(true);
 		addComponent(box);

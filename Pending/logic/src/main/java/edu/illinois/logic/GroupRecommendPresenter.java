@@ -7,4 +7,5 @@ import java.util.logging.Logger;
  */
 public class GroupRecommendPresenter<V extends GroupRecommendView, M extends GroupRecommendModel> extends CommonPresenter<V,M> {
 	private final static Logger logger = Logger.getLogger(GroupRecommendPresenter.class.getName());
+
 }
