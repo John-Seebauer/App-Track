@@ -73,10 +73,11 @@ public class GroupRecomender {
 		Pair<Integer,Float> current;
 		for(int j = 0; j< limit; j++) {
 			for(int i=0;i<dataset.size(); i++) {
-				if(j>=dataset.get(i).getTwo().size()) {
+				List<Pair<Integer,Float>> mrs = dataset.get(i).getTwo();
+				if(null == mrs || j>=mrs.size()) {
 					continue;
 				}
-				current = dataset.get(i).getTwo().get(j); // get the jth movie
+				current = mrs.get(j); // get the jth movie
 				if(!addedSet.contains(current.getOne())) {
 					retQ.add(current);
 					addedSet.add(current.getOne());
