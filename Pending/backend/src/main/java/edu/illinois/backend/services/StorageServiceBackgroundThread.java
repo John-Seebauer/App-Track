@@ -136,6 +136,9 @@ public class StorageServiceBackgroundThread implements Runnable {
 	}
 	
 	private DatabaseTable runSELECTquery(String query, String database) throws SQLException {
+		if (statement.isClosed()) {
+			statement = connect.createStatement();
+		}
 		ResultSet results = statement.executeQuery(query);
 		ResultSetMetaData metaData = results.getMetaData();
 		
@@ -195,6 +198,9 @@ public class StorageServiceBackgroundThread implements Runnable {
 	}
 	
 	private void runUPDATEquery(String query, boolean large) throws SQLException {
+		if (statement.isClosed()) {
+			statement = connect.createStatement();
+		}
 		if (large) {
 			statement.executeLargeUpdate(query);
 		} else {
