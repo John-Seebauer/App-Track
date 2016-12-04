@@ -9,6 +9,7 @@ import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * Created by john on 11/8/16.
  */
-public class WebGroupRecommendView extends AbstractWebView {
+public class WebGroupRecommendView extends AbstractWebView implements GroupRecommendView {
 	private final static Logger logger = Logger.getLogger(WebGroupRecommendView.class.getName());
 	
 	private Grid databaseGrid;
@@ -121,6 +122,7 @@ public class WebGroupRecommendView extends AbstractWebView {
 		findMoviesForAllUsers.addClickListener(clickEvent -> {
 			String usersStr = usersInput.getValue();
 			String[] users = usersStr.split(",");
+			actionListener.setupRecommendationEngine(Arrays.asList(users));
 			
 			//FreeformQuery query = new FreeformQuery("SELECT * FROM User",);
 		});
