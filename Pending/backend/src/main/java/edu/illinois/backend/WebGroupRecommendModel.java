@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Created by John Seebauer on 11/8/16.
  */
-public class WebGroupRecommendModel extends WebCommonModel implements GroupRecommendModel {
+public class WebGroupRecommendModel extends WebAbstractRecommendModel implements GroupRecommendModel {
 	private final static Logger logger = Logger.getLogger(WebGroupRecommendModel.class.getName());
 	private ActionListener actionListener;
 
