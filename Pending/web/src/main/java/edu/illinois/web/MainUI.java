@@ -10,10 +10,11 @@ import com.vaadin.ui.HorizontalLayout;
 import edu.illinois.backend.WebCommonModel;
 import edu.illinois.backend.WebGroupRecommendModel;
 import edu.illinois.backend.WebSingleRecommendModel;
-import edu.illinois.backend.WebTestModel;
-import edu.illinois.backend.databaseViewer.WebDatabaseViewerModel;
 import edu.illinois.backend.search.WebSearchModel;
-import edu.illinois.logic.*;
+import edu.illinois.logic.CommonPresenter;
+import edu.illinois.logic.GroupRecommendPresenter;
+import edu.illinois.logic.SearchPresenter;
+import edu.illinois.logic.SingleRecommendPresenter;
 import edu.illinois.web.search.WebSearchView;
 
 import java.util.logging.Level;
@@ -36,10 +37,10 @@ public class MainUI extends HorizontalLayout {
 				"Group Recommendation", FontAwesome.USERS),
 		ABOUT (WebAboutView.class, null, null,
 				"About", FontAwesome.INFO),
-		DATABASE(WebDatabaseViewerView.class, DatabaseViewerPresenter.class, WebDatabaseViewerModel.class,
+		/*DATABASE(WebDatabaseViewerView.class, DatabaseViewerPresenter.class, WebDatabaseViewerModel.class,
 				"Database Viewer", FontAwesome.DATABASE),
 		TEST(WebTestView.class, TestPresenter.class, WebTestModel.class,
-				"Test", FontAwesome.BUG );
+				"Test", FontAwesome.BUG )*/;
 		
 		final Resource icon;
 		final String caption;

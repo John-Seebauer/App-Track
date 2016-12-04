@@ -210,10 +210,13 @@ public class DialogBuilder {
 			}
 			Button okButton = new Button(yesText);
 			okButton.addClickListener(event -> {
-				this.close();
-				if (resultConsumer != null) {
-					resultConsumer.accept(YesNoCancelResult.YES);
+				if (isCloseValid == null || isCloseValid.getAsBoolean()) {
+					this.close();
+					if (resultConsumer != null) {
+						resultConsumer.accept(YesNoCancelResult.YES);
+					}
 				}
+				
 			});
 			okButton.setWidth(10.0f, Unit.EX);
 			okButton.addStyleName(ValoTheme.BUTTON_PRIMARY);

@@ -1,5 +1,6 @@
 package edu.illinois.web;
 
+import com.vaadin.data.Validator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.window.WindowMode;
@@ -10,6 +11,7 @@ import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +45,14 @@ public class WebLoginView extends Window implements LoginView {
 		loginBox.setMargin(true);
 		loginBox.setSpacing(true);
 		TextField username = new TextField("Username");
+		username.addValidator((Validator) value -> {
+			for (String item : Arrays.asList(" ", "\t", "\n", "\0", ";")) {
+				if (String.valueOf(value).contains(item)) {
+					throw new Validator.InvalidValueException("Username contains " + item);
+				}
+			}
+		});
+		
 		PasswordField password = new PasswordField("Password");
 		Button createNewUser = new Button("New User");
 		createNewUser.addStyleName(ValoTheme.BUTTON_BORDERLESS);
@@ -54,8 +64,22 @@ public class WebLoginView extends Window implements LoginView {
 			
 			Label nameLabel = new Label("Name");
 			TextField nameField = new TextField();
+			nameField.addValidator((Validator) value -> {
+				for (String item : Arrays.asList(" ", "\t", "\n", "\0", ";")) {
+					if (String.valueOf(value).contains(item)) {
+						throw new Validator.InvalidValueException("Username contains " + item);
+					}
+				}
+			});
 			Label usernameLabel = new Label("Username");
 			TextField usernameField = new TextField();
+			usernameField.addValidator((Validator) value -> {
+				for (String item : Arrays.asList(" ", "\t", "\n", "\0", ";")) {
+					if (String.valueOf(value).contains(item)) {
+						throw new Validator.InvalidValueException("Username contains " + item);
+					}
+				}
+			});
 			Label passwordLabel = new Label("Password");
 			PasswordField passwordField = new PasswordField();
 			passwordField.setImmediate(true);
@@ -69,6 +93,7 @@ public class WebLoginView extends Window implements LoginView {
 			
 			new DialogBuilder(ui, loginLayout, DialogType.INFO)
 				.showCancel()
+					.acceptEnabled(() -> nameField.isValid() && usernameField.isValid())
 				.resultConsumer( consumer -> {
 					if(YesNoCancelResult.YES.equals(consumer)) {
 						actionListener.addNewUser(nameField.getValue(), usernameField.getValue(),
@@ -83,8 +108,12 @@ public class WebLoginView extends Window implements LoginView {
 		enterShortcut.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		enterShortcut.addStyleName(ValoTheme.BUTTON_PRIMARY);
 		enterShortcut.addClickListener( listener -> {
-			String passwordText = password.getValue();
-			actionListener.authenticate(username.getValue(), passwordText);
+			if (username.isValid()) {
+				String passwordText = password.getValue();
+				actionListener.authenticate(username.getValue(), passwordText);
+			} else {
+				showMessage("Invalid username");
+			}
 		});
 		
 		username.setTabIndex(1);
