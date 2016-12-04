@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 /**
  * Created by John Seebauer (seebaue2) on 11/8/16.
  */
-public class SingleRecommendPresenter<V extends SingleRecommendView, M extends SingleRecommendModel> extends CommonPresenter<V,M>
+public class SingleRecommendPresenter<V extends SingleRecommendView, M extends SingleRecommendModel> extends AbstractRecommendPresenter<V, M>
 	implements  SingleRecommendView.ActionListener, SingleRecommendModel.ActionListener {
 	private final static Logger logger = Logger.getLogger(SingleRecommendPresenter.class.getName());
 
@@ -54,9 +54,5 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 					.reduce(" ", (acc,b)-> acc+ "\n"+b);
 			view.showMessage(displayString);
 		}
-	}
-
-	private String convertIDtoTitle(Integer movieID) {
-		return movieID.toString();
 	}
 }

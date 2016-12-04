@@ -5,7 +5,7 @@ import edu.illinois.util.JDBCResult;
 /**
  * Created by John Seebauer (seebaue2) on 11/8/16.
  */
-public interface GroupRecommendModel extends CommonModel {
+public interface GroupRecommendModel extends AbstractRecommendModel {
 	
 	void runSELECTquery(String query);
 	
