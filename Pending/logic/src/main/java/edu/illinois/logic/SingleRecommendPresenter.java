@@ -23,9 +23,9 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 
 		this.view = view;
 		this.model = model;
-		model.init();
-		view.setActionListener(this);
-		model.setActionListener(this);
+		this.model.init();
+		this.view.setActionListener(this);
+		this.model.setActionListener(this);
 	}
 
 	public void setupRecommendationEngine(){
@@ -44,7 +44,19 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 	@Override
 	public void createSingleRecommendationEngine(HashMap<String, List<Pair<Integer, Float>>> dataset) {
 		engine = new SingleRecommender(dataset,  new ArrayList(dataset.keySet()) );
-		logger.info("maybe worked for user: " + model.getUser());
-		view.showMessage(engine.getRecommendations(model.getUser()).get(0).getOne().toString());
+		logger.info( model.getUser()+" asked for a recomendation");
+		List<Pair<Integer,Float>> recs = engine.getRecommendations(model.getUser());
+		if(recs.size()==0) {
+			view.showMessage("Cloud Atlas is quite enjoyable");
+		} else {
+			String displayString = recs.stream()
+					.map(p -> convertIDtoTitle(p.getOne()))
+					.reduce(" ", (acc,b)-> acc+ "\n"+b);
+			view.showMessage(displayString);
+		}
+	}
+
+	private String convertIDtoTitle(Integer movieID) {
+		return movieID.toString();
 	}
 }
