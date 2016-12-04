@@ -5,6 +5,7 @@ package edu.illinois.logic;
  */
 public interface SingleRecommendView extends CommonView {
 
+	void setActionListener(ActionListener actionListener);
 	interface ActionListener {
 		void setupRecommendationEngine();
 		void getRecommendation();

@@ -22,7 +22,8 @@ public class WebSingleRecommendModel extends WebCommonModel implements SingleRec
 	@Override
 	public void runGetRatingsTable() {
 		//TODO: add NULL
-		storageService.runSELECTquery(getProperty("LOGIC.GET_RATINGS_TABLE_QUERY"), this::notifyGetRatingsTable, null);
+		System.out.println(getProperty("GET_RATINGS_TABLE_QUERY"));
+		storageService.runSELECTquery(getProperty("GET_RATINGS_TABLE_QUERY"), this::notifyGetRatingsTable, null);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class WebSingleRecommendModel extends WebCommonModel implements SingleRec
 		DatabaseTable dbTable = ratingsTableResult.getResult().get();
 		dbTable.getRows().stream()
 				.forEach(row -> {
-					Integer movieID = row.getAttribute("movies_id", Integer.class);
+					Integer movieID = row.getAttribute("movie_id", Integer.class);
 					Float rating =  row.getAttribute("rating", Integer.class).floatValue();
 					String username = row.getAttribute("username", String.class);
 					if(!dataset.containsKey(username)) {

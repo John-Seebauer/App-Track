@@ -18,6 +18,16 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 
 	SingleRecommender engine = null;
 
+
+	public void init(V view, M model) {
+
+		this.view = view;
+		this.model = model;
+		model.init();
+		view.setActionListener(this);
+		model.setActionListener(this);
+	}
+
 	public void setupRecommendationEngine(){
 		model.runGetRatingsTable();
 	}

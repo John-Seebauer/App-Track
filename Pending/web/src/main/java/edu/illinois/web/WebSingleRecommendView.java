@@ -38,11 +38,17 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 		setSpacing(true);
 		setMargin(true);
 		addComponent(box);
+		addComponent(getRecsButton);
 	}
 	
 	
 	@Override
 	public void enter(ViewChangeListener.ViewChangeEvent event) {
 		ui.access( () -> ui.getPage().setTitle(event.getViewName()));
+	}
+
+	@Override
+	public void setActionListener(ActionListener actionListener) {
+		this.actionListener=actionListener;
 	}
 }
