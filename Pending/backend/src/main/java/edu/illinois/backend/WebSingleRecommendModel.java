@@ -1,15 +1,15 @@
 package edu.illinois.backend;
 
 import edu.illinois.logic.SingleRecommendModel;
-import edu.illinois.util.*;
+import edu.illinois.util.DatabaseTable;
+import edu.illinois.util.JDBCResult;
+import edu.illinois.util.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Created by John Seebauer (seebaue2) on 11/8/16.

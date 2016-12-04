@@ -74,10 +74,23 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 			}
 		});
 		
+		Button rateButton = new Button("Rate selected");
+		rateButton.setVisible(false);
+		rateButton.addClickListener(listener -> {
+			Integer selectedRow = (Integer) databaseGrid.getSelectedRow();
+			Item selectedItem = databaseGrid.getContainerDataSource().getItem(selectedRow);
+			if (selectedItem != null) {
+				DatabaseEntry databaseEntry = DatabaseEntry.generateFromItem(selectedItem, actionListener.getProperty("Default_Database"));
+				actionListener.initRatingWindow(databaseEntry);
+			}
+		});
+		
+		
 		top.setSpacing(true);
 		top.addComponent(queryBar);
 		top.addComponent(search);
 		top.addComponent(progressBar);
+		top.addComponent(rateButton);
 		top.setWidth("100%");
 		top.setExpandRatio(queryBar, 1.0f);
 		
@@ -85,14 +98,15 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		databaseGrid.setSizeFull();
 		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		
-		
-		
 		databaseGrid.addItemClickListener( listener -> {
-			if(listener.isDoubleClick()) {
-				Integer selectedRow = (Integer) databaseGrid.getSelectedRow();
-				Item selectedItem = databaseGrid.getContainerDataSource().getItem(selectedRow);
-				DatabaseEntry databaseEntry = DatabaseEntry.generateFromItem(selectedItem, actionListener.getProperty("Default_Database"));
-				actionListener.initRatingWindow(databaseEntry);
+			if (!databaseGrid.isSelected(listener.getItemId())) {
+				rateButton.setVisible(true);
+				if (listener.isDoubleClick()) {
+					DatabaseEntry databaseEntry = DatabaseEntry.generateFromItem(listener.getItem(), actionListener.getProperty("Default_Database"));
+					actionListener.initRatingWindow(databaseEntry);
+				}
+			} else {
+				rateButton.setVisible(false);
 			}
 		});
 		
@@ -144,8 +158,8 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		plotArea.setReadOnly(true);
 		plotArea.setSizeFull();
 		
-		Slider rating = new Slider(0, 5, 0);
-		rating.setValue(3.0);
+		Slider rating = new Slider(0, 10, 0);
+		rating.setValue(8.0);
 		rating.addValueChangeListener(ratingValue -> rating.setValue(Math.ceil((Double) ratingValue.getProperty().getValue())));
 		rating.setWidth("100%");
 		

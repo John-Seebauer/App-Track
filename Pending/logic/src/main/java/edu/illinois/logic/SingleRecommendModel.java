@@ -10,8 +10,8 @@ import java.util.List;
  * Created by John Seebauer (seebaue2) on 11/8/16.
  */
 public interface SingleRecommendModel extends CommonModel {
-
-
+	
+	
 	void runGetRatingsTable();
 
 	void notifyGetRatingsTable(final JDBCResult ratingsTableResult);

@@ -57,10 +57,13 @@ public abstract class AbstractWebView extends VerticalLayout implements CommonVi
 	}
 	
 	public void showNotification(String title, String description) {
-		Notification.show(title, description, Notification.Type.HUMANIZED_MESSAGE);
+		Notification notification = new Notification(title, description, Notification.Type.TRAY_NOTIFICATION);
+		
+		getUI().access(() -> notification.show(getUI().getPage()));
 	}
 	
 	public void showNotification(String description) {
-		Notification.show(description);
+		Notification notification = new Notification(description, Notification.Type.TRAY_NOTIFICATION);
+		getUI().access(() -> notification.show(getUI().getPage()));
 	}
 }
