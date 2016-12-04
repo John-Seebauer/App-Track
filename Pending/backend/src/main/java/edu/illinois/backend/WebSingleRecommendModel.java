@@ -18,10 +18,6 @@ public class WebSingleRecommendModel extends WebCommonModel implements SingleRec
 	private final static Logger logger = Logger.getLogger(WebSingleRecommendModel.class.getName());
 	private ActionListener actionListener;
 	
-	@Override
-	public void runUPDATEquery(String query) {
-
-	}
 
 	@Override
 	public void runGetRatingsTable() {
