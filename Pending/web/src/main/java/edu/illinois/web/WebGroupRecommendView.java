@@ -2,6 +2,7 @@ package edu.illinois.web;
 
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import edu.illinois.logic.GroupRecommendView;
@@ -23,6 +24,8 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 	
 	private Grid databaseGrid;
 	
+	private VerticalLayout vl;
+	
 	private GroupRecommendView.ActionListener actionListener;
 	private Collection<String> selectedUsers = new CopyOnWriteArraySet<>();
 	
@@ -42,6 +45,7 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		HorizontalSplitPanel base = new HorizontalSplitPanel();
 		base.setSizeFull();
+		
 		
 		Label usersLabel = new Label("Users in group:");
 		ListSelect usersList = new ListSelect();
@@ -107,36 +111,30 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		base.addComponent(leftPanel);
 		base.setFirstComponent(leftPanel);
-		base.setSplitPosition(10f);
+		base.setSplitPosition(40f);
 		
 		
 		
-		VerticalLayout vl = new VerticalLayout();
+		vl = new VerticalLayout();
 		
-		Label label = new Label("Enter users separated by commas");
 		
-		TextField usersInput = new TextField();
-		usersInput.setWidth("100%");
 		Button findMoviesForAllUsers = new Button("Find movies!");
 		
 		findMoviesForAllUsers.addClickListener(clickEvent -> {
-			String usersStr = usersInput.getValue();
-			String[] users = usersStr.split(",");
-			actionListener.setupRecommendationEngine(Arrays.asList(users));
 			
-			//FreeformQuery query = new FreeformQuery("SELECT * FROM User",);
+
+			//actionListener.setupRecommendationEngine(Arrays.asList(users));
+		
 		});
 		
 		HorizontalLayout firstQuery = new HorizontalLayout();
 		firstQuery.setSpacing(true);
-		firstQuery.addComponent(usersInput);
 		firstQuery.addComponent(findMoviesForAllUsers);
 		firstQuery.setExpandRatio(findMoviesForAllUsers, 1.0f);
 		
 		databaseGrid = new Grid();
 		databaseGrid.setSizeFull();
 		
-		vl.addComponent(label);
 		vl.addComponent(firstQuery);
 		vl.addComponent(databaseGrid);
 		
@@ -159,4 +157,22 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 	public void enter(ViewChangeListener.ViewChangeEvent event) {
 		ui.access( () -> ui.getPage().setTitle(event.getViewName()));
 	}
+	
+	
+	
+	public void populateUI(String[] movies){
+		
+		vl.removeComponent(databaseGrid);
+		databaseGrid = new Grid();
+		databaseGrid.setSizeFull();
+		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+		databaseGrid.addColumn("movie name", String.class);
+		vl.addComponent(databaseGrid);
+		
+		for(String movieStr : movies){
+			databaseGrid.addRow(movieStr);
+		}
+		
+	}
+	
 }

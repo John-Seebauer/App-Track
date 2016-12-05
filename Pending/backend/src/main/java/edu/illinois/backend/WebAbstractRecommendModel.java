@@ -3,7 +3,9 @@ package edu.illinois.backend;
 import edu.illinois.logic.AbstractRecommendModel;
 import edu.illinois.util.DatabaseTable;
 import edu.illinois.util.JDBCResult;
+import edu.illinois.util.Pair;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -29,10 +31,26 @@ public abstract class WebAbstractRecommendModel extends WebCommonModel implement
 		if (result.getOriginalQuery().getAdditionalArgs().isPresent()) {
 			List<Object> argsArray = (List<Object>) result.getOriginalQuery().getAdditionalArgs().get();
 			Consumer<List<String>> resultConsumer = (Consumer<List<String>>) argsArray.get(0);
-			Collection<Integer> movieID = (Collection<Integer>) argsArray.get(1);
+			Collection<Integer> movieID = (Collection<Integer>) argsArray.get(1);//sorted correctly
 			if (result.getResult().isPresent()) {
 				DatabaseTable databaseTable = result.getResult().get();
+	
 				
+				//Pairs of IDs and movieNames, use information like databaseTable to populate
+				//TODO: make this conversion
+				ArrayList<Pair<Integer,String>> idMovies = new ArrayList<Pair<Integer,String>>();
+				
+				ArrayList<String> ret = new ArrayList<String>();
+				for(Integer currMovieId : movieID){
+					for(int j = 0; j < idMovies.size(); j++){
+						if(idMovies.get(j).getOne() == currMovieId){
+							ret.add(idMovies.get(j).getTwo());
+							break;
+						}
+					}
+				}
+				
+				resultConsumer.accept(ret);
 			}
 			
 		}

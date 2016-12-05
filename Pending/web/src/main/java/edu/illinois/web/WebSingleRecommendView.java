@@ -1,12 +1,12 @@
 package edu.illinois.web;
 
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 import edu.illinois.logic.SingleRecommendView;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -14,7 +14,11 @@ import java.util.logging.Logger;
  */
 public class WebSingleRecommendView extends AbstractWebView implements SingleRecommendView {
 	private final static Logger logger = Logger.getLogger(WebSingleRecommendView.class.getName());
-
+	
+	private Grid databaseGrid;
+	private VerticalLayout baseContainer;
+	
+	
 	private SingleRecommendView.ActionListener actionListener;
 	@Override
 	public void init(UI ui) {
@@ -24,21 +28,27 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 	}
 	
 	private void setupView() {
-		ComboBox box = new ComboBox("Genre");
-		for(String item : Arrays.asList("Comedy", "Drama", "Horror", "Romance")) {
-			box.addItem(item);
-		}
-		box.addValueChangeListener( event -> {
-			showMessage("You selected " + box.getValue() + " but recommendations are not yet implemented.");
-		});
+		
+		 baseContainer = new VerticalLayout();
+		
 		Button getRecsButton = new Button("Recommend something for me!");
 		getRecsButton.addClickListener(clickEvent -> {
 			actionListener.setupRecommendationEngine();
+			
 		});
+		
+		databaseGrid = new Grid();
+		databaseGrid.setSizeFull();
+		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+		databaseGrid.addColumn("movie name", String.class);
+		
+		
+		baseContainer.addComponent(getRecsButton);
+		baseContainer.addComponent(databaseGrid);
+		
 		setSpacing(true);
 		setMargin(true);
-		addComponent(box);
-		addComponent(getRecsButton);
+		addComponent(baseContainer);
 	}
 	
 	
@@ -50,5 +60,48 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 	@Override
 	public void setActionListener(ActionListener actionListener) {
 		this.actionListener=actionListener;
+	}
+	
+	
+	public void populateUI(String[] movies){
+		
+		baseContainer.removeComponent(databaseGrid);
+		databaseGrid = new Grid();
+		databaseGrid.setSizeFull();
+		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+		databaseGrid.addColumn("movie name", String.class);
+		baseContainer.addComponent(databaseGrid);
+		removeComponent(baseContainer);
+		addComponent(baseContainer);
+		
+		for(String movieStr : movies){
+			databaseGrid.addRow(movieStr);
+		}
+
+	}
+	
+	
+	private void changeContainer(IndexedContainer container) {
+		if (container != null) {
+			ui.access( () -> {
+				databaseGrid.removeAllColumns();
+				databaseGrid.setContainerDataSource(container);
+			});
+		}
+	}
+	
+	private void changeContainerWithHiddenId(IndexedContainer container, Collection<String> hiddenTitles) {
+		if (container != null) {
+			ui.access( () -> {
+				databaseGrid.removeAllColumns();
+				databaseGrid.setContainerDataSource(container);
+				for (Grid.Column column : databaseGrid.getColumns()) {
+					if(hiddenTitles.contains(column.getPropertyId())) {
+						column.setHidden(true);
+						column.setHidable(false);
+					}
+				}
+			});
+		}
 	}
 }
