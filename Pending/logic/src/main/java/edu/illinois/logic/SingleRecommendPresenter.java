@@ -51,7 +51,7 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 		} else {
 			/*
 			String displayString = recs.stream()
-					.map(p -> convertIDtoTitle(p.getOne()))
+					.map(p -> p.getOne().toString())
 					.reduce(" ", (acc,b)-> acc+ "\n"+b);
 			view.showMessage(displayString);
 			*/
