@@ -13,34 +13,34 @@ import java.util.logging.Logger;
  * Created by John Seebauer (seebaue2) on 11/8/16.
  */
 public class SingleRecommendPresenter<V extends SingleRecommendView, M extends SingleRecommendModel> extends AbstractRecommendPresenter<V, M>
-	implements  SingleRecommendView.ActionListener, SingleRecommendModel.ActionListener {
+		implements  SingleRecommendView.ActionListener, SingleRecommendModel.ActionListener {
 	private final static Logger logger = Logger.getLogger(SingleRecommendPresenter.class.getName());
-
+	
 	SingleRecommender engine = null;
-
-
+	
+	
 	public void init(V view, M model) {
-
+		
 		this.view = view;
 		this.model = model;
 		this.model.init();
 		this.view.setActionListener(this);
 		this.model.setActionListener(this);
 	}
-
+	
 	public void setupRecommendationEngine(){
 		model.runGetRatingsTable();
 	}
 	public void getRecommendation(){
-
-
+		
+		
 	}
-
+	
 	@Override
 	public void notifyFailure(JDBCResult result) {
-
+		
 	}
-
+	
 	@Override
 	public void createSingleRecommendationEngine(HashMap<String, List<Pair<Integer, Float>>> dataset) {
 		engine = new SingleRecommender(dataset,  new ArrayList(dataset.keySet()) );
@@ -49,10 +49,12 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 		if(recs.size()==0) {
 			view.showMessage("Cloud Atlas is quite enjoyable");
 		} else {
+			/*
 			String displayString = recs.stream()
 					.map(p -> convertIDtoTitle(p.getOne()))
 					.reduce(" ", (acc,b)-> acc+ "\n"+b);
 			view.showMessage(displayString);
+			*/
 		}
 	}
 }

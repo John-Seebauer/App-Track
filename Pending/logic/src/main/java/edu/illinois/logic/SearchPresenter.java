@@ -31,8 +31,39 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	}
 	
 	@Override
-	public void initSearchrequst(String query) {
-		model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE"), query));
+	public void initSearchrequst(String query, String og1Val, String og2Val) {
+		
+		if(og1Val.equals("exact match")){
+			
+			if(og2Val.equals("actors")){
+				model.runSELECTquery(String.format(model.getProperty("backend.GET_ACTOR_S"), query));
+				
+			}
+			else if(og2Val.equals("directors")){
+				model.runSELECTquery(String.format(model.getProperty("backend.GET_DIRECTOR_S"), query));
+				
+			}
+			else{
+				model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE_S"), query));
+			}
+			
+		}
+		else{
+			
+			if(og2Val.equals("actors")){
+				model.runSELECTquery(String.format(model.getProperty("backend.GET_ACTOR"), query));
+				
+			}
+			else if(og2Val.equals("directors")){
+				model.runSELECTquery(String.format(model.getProperty("backend.GET_DIRECTOR"), query));
+				
+			}
+			else{
+				model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE"), query));
+			}
+			
+		}
+		
 	}
 	
 	@Override

@@ -67,9 +67,18 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		TextField queryBar = new TextField();
 		queryBar.setWidth("100%");
 		Button search = new Button("Search");
+		OptionGroup og1 = new OptionGroup("word matching:");
+		og1.addItems("exact match", "similar match");
+		OptionGroup og2 = new OptionGroup("searching for:");
+		og2.addItems("actors", "movies", "directors");
 		search.addClickListener(event -> {
 			if (queryBar.getValue() != null) {
-				actionListener.initSearchrequst(queryBar.getValue());
+				
+				System.out.println(og1.getValue());
+				
+				if(og1.getValue()=="exact match");
+				
+				actionListener.initSearchrequst(queryBar.getValue(), og1.getValue().toString(), og2.getValue().toString());
 				progressBar.setVisible(true);
 			}
 		});
@@ -86,8 +95,13 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		});
 		
 		
+		
+		
+		
 		top.setSpacing(true);
 		top.addComponent(queryBar);
+		top.addComponent(og1);
+		top.addComponent(og2);
 		top.addComponent(search);
 		top.addComponent(progressBar);
 		top.addComponent(rateButton);
