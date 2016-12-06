@@ -1,7 +1,8 @@
 package edu.illinois.logic;
 
-import edu.illinois.util.DatabaseEntry;
-import edu.illinois.util.JDBCResult;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
+import edu.illinois.util.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,44 +27,27 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	}
 	
 	@Override
-	public String getProperty(String name) {
-		return super.getProperty(name);
-	}
-	
-	@Override
-	public void initSearchrequst(String query, String og1Val, String og2Val) {
-		
-		if(og1Val.equals("exact match")){
-			
-			if(og2Val.equals("actors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_ACTOR_S"), query));
-				
-			}
-			else if(og2Val.equals("directors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_DIRECTOR_S"), query));
-				
-			}
-			else{
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE_S"), query));
-			}
-			
+	public void initSearchRequest(String query, boolean exactMatch, String og2Val) {
+		switch (og2Val) {
+			case "Title":
+				if (exactMatch) {
+					model.runSELECTquery(String.format(getProperty("backend.GET_MOVIE_S"), query));
+				} else {
+					model.runSELECTquery(String.format(getProperty("backend.GET_MOVIE"), query));
+				}
+				break;
+			case "Actor":
+				model.runSELECTquery(String.format(getProperty("backend.GET_ACTOR"), convertName(query)));
+				break;
+			case "Director":
+				model.runSELECTquery(String.format(getProperty("backend.GET_DIRECTOR"), convertName(query)));
+				break;
+			case "Writer":
+				model.runSELECTquery(String.format(getProperty("backend.GET_WRITER"), convertName(query)));
+				break;
+			default:
+				throw new RuntimeException("Unknown type");
 		}
-		else{
-			
-			if(og2Val.equals("actors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_ACTOR"), query));
-				
-			}
-			else if(og2Val.equals("directors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_DIRECTOR"), query));
-				
-			}
-			else{
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE"), query));
-			}
-			
-		}
-		
 	}
 	
 	@Override
@@ -75,9 +59,49 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	}
 	
 	@Override
-	public void notifySELECTresponse(JDBCResult result) {
+	public void formatMovieContainer(JDBCResult result) {
 		if (result.getResult().isPresent()) {
-			view.notifySELECTresponse(result.formatToContainer());
+			DatabaseTable unformatted = result.getResult().get();
+			DatabaseRequestFormat requestFormat = new DatabaseRequestFormat(unformatted.getDatabase());
+			requestFormat.addAttribute("movie_id", Integer.class);
+			requestFormat.addAttribute("title", String.class);
+			requestFormat.addAttribute("year", Integer.class);
+			
+			DatabaseTable formatted = new DatabaseTable(unformatted.getDatabase(), requestFormat);
+			for (DatabaseEntry entry : unformatted.getRows()) {
+				DatabaseEntry formattedEntry = new DatabaseEntry(entry.getDatabase());
+				formattedEntry.addAttribute("movie_id", Integer.class,
+						entry.getAttribute("movie_id", Integer.class));
+				formattedEntry.addAttribute("title", String.class,
+						entry.getAttribute("title", String.class));
+				formattedEntry.addAttribute("year", Integer.class,
+						entry.getAttribute("production_year", Integer.class));
+				formatted.addRow(formattedEntry);
+			}
+			
+			IndexedContainer container = new IndexedContainer();
+			
+			for (Pair<String, Class<?>> entry : formatted.getColumns()) {
+				container.addContainerProperty(entry.getOne(), entry.getTwo(), null);
+			}
+			
+			for (DatabaseEntry row : formatted.getRows()) {
+				//Looks weird, but it's in the docs
+				Object itemID = container.addItem();
+				Item item = container.getItem(itemID);
+				for (Pair<String, Class<?>> entry : formatted.getColumns()) {
+					item.getItemProperty(entry.getOne()).setValue(row.getAttribute(entry.getOne(), entry.getTwo()));
+				}
+			}
+			
+			view.displaySearchResponse(container);
+		}
+	}
+	
+	@Override
+	public void formatSearchResult(JDBCResult result) {
+		if (result.getResult().isPresent()) {
+			view.displaySearchResponse(result.formatToContainer());
 		}
 	}
 	
@@ -133,5 +157,11 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 				String.format(model.getProperty("PLOT_FOR_MOVIE"), movie_id), selected);
 	}
 	
-	
+	private String convertName(String input) throws IllegalArgumentException {
+		String[] split = input.split(" ");
+		if (split.length == 2) {
+			return String.format("%s, %s", split[1], split[0]);
+		}
+		throw new IllegalArgumentException("Bad name input");
+	}
 }

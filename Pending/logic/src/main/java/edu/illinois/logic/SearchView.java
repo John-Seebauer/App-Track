@@ -10,7 +10,7 @@ public interface SearchView extends CommonView {
 	
 	void setActionListener(SearchView.ActionListener actionListener);
 	
-	void notifySELECTresponse(IndexedContainer container);
+	void displaySearchResponse(IndexedContainer container);
 	
 	void queryFailedCleanup();
 	
@@ -19,7 +19,7 @@ public interface SearchView extends CommonView {
 	interface ActionListener {
 		String getProperty(String name);
 		
-		void initSearchrequst(String query, String og1Val, String og2Val);
+		void initSearchRequest(String query, boolean exactMatch, String og2Val);
 		
 		void rateMovie(Integer movieID, Double value, String name);
 		

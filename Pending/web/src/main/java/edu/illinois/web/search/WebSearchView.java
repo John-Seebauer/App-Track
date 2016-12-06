@@ -4,6 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
+import com.vaadin.ui.renderers.NumberRenderer;
 import edu.illinois.logic.SearchView;
 import edu.illinois.util.DatabaseEntry;
 import edu.illinois.web.AbstractWebView;
@@ -11,8 +12,8 @@ import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.logging.Logger;
 
 /**
@@ -34,8 +35,8 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	}
 	
 	@Override
-	public void notifySELECTresponse(IndexedContainer container) {
-		changeContainerWithHiddenId(container, Collections.singletonList("movie_id"));
+	public void displaySearchResponse(IndexedContainer container) {
+		changeSearchContainer(container);
 		progressBar.setVisible(false);
 	}
 	
@@ -67,18 +68,17 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		TextField queryBar = new TextField();
 		queryBar.setWidth("100%");
 		Button search = new Button("Search");
-		OptionGroup og1 = new OptionGroup("word matching:");
-		og1.addItems("exact match", "similar match");
-		OptionGroup og2 = new OptionGroup("searching for:");
-		og2.addItems("actors", "movies", "directors");
+		CheckBox exactMatch = new CheckBox("Exact match");
+		ComboBox og2 = new ComboBox("Search for movie by:");
+		og2.addItems("Title", "Actor", "Director", "Writer");
+		og2.setValue("Title");
+		og2.setImmediate(true);
+		og2.setNullSelectionAllowed(false);
+		og2.setTextInputAllowed(false);
 		search.addClickListener(event -> {
 			if (queryBar.getValue() != null) {
 				
-				System.out.println(og1.getValue());
-				
-				if(og1.getValue()=="exact match");
-				
-				actionListener.initSearchrequst(queryBar.getValue(), og1.getValue().toString(), og2.getValue().toString());
+				actionListener.initSearchRequest(queryBar.getValue(), exactMatch.getValue().booleanValue(), og2.getValue().toString());
 				progressBar.setVisible(true);
 			}
 		});
@@ -94,19 +94,20 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 			}
 		});
 		
-		
-		
-		
-		
 		top.setSpacing(true);
 		top.addComponent(queryBar);
-		top.addComponent(og1);
-		top.addComponent(og2);
 		top.addComponent(search);
 		top.addComponent(progressBar);
 		top.addComponent(rateButton);
 		top.setWidth("100%");
 		top.setExpandRatio(queryBar, 1.0f);
+		
+		
+		HorizontalLayout searchOpts = new HorizontalLayout();
+		searchOpts.setWidth("100%");
+		searchOpts.addComponent(og2);
+		searchOpts.addComponent(exactMatch);
+		searchOpts.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
 		
 		databaseGrid = new Grid();
 		databaseGrid.setSizeFull();
@@ -125,6 +126,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		});
 		
 		baseContainer.addComponent(top);
+		baseContainer.addComponent(searchOpts);
 		baseContainer.addComponent(databaseGrid);
 		baseContainer.setExpandRatio(databaseGrid, 1.0f);
 		addComponent(baseContainer);
@@ -140,15 +142,20 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		}
 	}
 	
-	private void changeContainerWithHiddenId(IndexedContainer container, Collection<String> hiddenTitles) {
+	private void changeSearchContainer(IndexedContainer container) {
 		if (container != null) {
+			NumberFormat yearFormat = new DecimalFormat("####");
+			NumberRenderer yearRenderer = new NumberRenderer(yearFormat);
+			
 			ui.access( () -> {
 				databaseGrid.removeAllColumns();
 				databaseGrid.setContainerDataSource(container);
 				for (Grid.Column column : databaseGrid.getColumns()) {
-					if(hiddenTitles.contains(column.getPropertyId())) {
+					if ("movie_id".equals(column.getPropertyId())) {
 						column.setHidden(true);
 						column.setHidable(false);
+					} else if ("year".equals(column.getPropertyId())) {
+						column.setRenderer(yearRenderer);
 					}
 				}
 			});
