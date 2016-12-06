@@ -26,44 +26,27 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	}
 	
 	@Override
-	public String getProperty(String name) {
-		return super.getProperty(name);
-	}
-	
-	@Override
-	public void initSearchrequst(String query, String og1Val, String og2Val) {
-		
-		if(og1Val.equals("exact match")){
-			
-			if(og2Val.equals("actors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_ACTOR_S"), query));
-				
-			}
-			else if(og2Val.equals("directors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_DIRECTOR_S"), query));
-				
-			}
-			else{
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE_S"), query));
-			}
-			
+	public void initSearchRequest(String query, boolean exactMatch, String og2Val) {
+		switch (og2Val) {
+			case "Title":
+				if (exactMatch) {
+					model.runSELECTquery(String.format(getProperty("backend.GET_MOVIE_S"), query));
+				} else {
+					model.runSELECTquery(String.format(getProperty("backend.GET_MOVIE"), query));
+				}
+				break;
+			case "Actor":
+				model.runSELECTquery(String.format(getProperty("backend.GET_ACTOR"), convertName(query)));
+				break;
+			case "Director":
+				model.runSELECTquery(String.format(getProperty("backend.GET_DIRECTOR"), convertName(query)));
+				break;
+			case "Writer":
+				model.runSELECTquery(String.format(getProperty("backend.GET_WRITER"), convertName(query)));
+				break;
+			default:
+				throw new RuntimeException("Unknown type");
 		}
-		else{
-			
-			if(og2Val.equals("actors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_ACTOR"), query));
-				
-			}
-			else if(og2Val.equals("directors")){
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_DIRECTOR"), query));
-				
-			}
-			else{
-				model.runSELECTquery(String.format(model.getProperty("backend.GET_MOVIE"), query));
-			}
-			
-		}
-		
 	}
 	
 	@Override
@@ -133,5 +116,11 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 				String.format(model.getProperty("PLOT_FOR_MOVIE"), movie_id), selected);
 	}
 	
-	
+	private String convertName(String input) throws IllegalArgumentException {
+		String[] split = input.split(" ");
+		if (split.length == 2) {
+			return String.format("%s, %s", split[1], split[0]);
+		}
+		throw new IllegalArgumentException("Bad name input");
+	}
 }

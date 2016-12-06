@@ -67,18 +67,17 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		TextField queryBar = new TextField();
 		queryBar.setWidth("100%");
 		Button search = new Button("Search");
-		OptionGroup og1 = new OptionGroup("word matching:");
-		og1.addItems("exact match", "similar match");
-		OptionGroup og2 = new OptionGroup("searching for:");
-		og2.addItems("actors", "movies", "directors");
+		CheckBox exactMatch = new CheckBox("Exact match");
+		ComboBox og2 = new ComboBox("Search for movie by:");
+		og2.addItems("Title", "Actor", "Director", "Writer");
+		og2.setValue("Title");
+		og2.setImmediate(true);
+		og2.setNullSelectionAllowed(false);
+		og2.setTextInputAllowed(false);
 		search.addClickListener(event -> {
 			if (queryBar.getValue() != null) {
 				
-				System.out.println(og1.getValue());
-				
-				if(og1.getValue()=="exact match");
-				
-				actionListener.initSearchrequst(queryBar.getValue(), og1.getValue().toString(), og2.getValue().toString());
+				actionListener.initSearchRequest(queryBar.getValue(), exactMatch.getValue().booleanValue(), og2.getValue().toString());
 				progressBar.setVisible(true);
 			}
 		});
@@ -94,19 +93,20 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 			}
 		});
 		
-		
-		
-		
-		
 		top.setSpacing(true);
 		top.addComponent(queryBar);
-		top.addComponent(og1);
-		top.addComponent(og2);
 		top.addComponent(search);
 		top.addComponent(progressBar);
 		top.addComponent(rateButton);
 		top.setWidth("100%");
 		top.setExpandRatio(queryBar, 1.0f);
+		
+		
+		HorizontalLayout searchOpts = new HorizontalLayout();
+		searchOpts.setWidth("100%");
+		searchOpts.addComponent(og2);
+		searchOpts.addComponent(exactMatch);
+		searchOpts.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
 		
 		databaseGrid = new Grid();
 		databaseGrid.setSizeFull();
@@ -125,6 +125,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		});
 		
 		baseContainer.addComponent(top);
+		baseContainer.addComponent(searchOpts);
 		baseContainer.addComponent(databaseGrid);
 		baseContainer.setExpandRatio(databaseGrid, 1.0f);
 		addComponent(baseContainer);
