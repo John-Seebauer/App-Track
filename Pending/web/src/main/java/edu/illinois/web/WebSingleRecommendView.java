@@ -44,6 +44,7 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 		databaseGrid.addColumn("movie name", String.class);
 		
 		
+		
 		baseContainer.addComponent(getRecsButton);
 		baseContainer.addComponent(databaseGrid);
 		

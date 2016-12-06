@@ -131,14 +131,8 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		findMoviesForAllUsers.addClickListener(clickEvent -> {
 			
-//			actionListener.setupRecommendationEngine(users);
-		
-			String[] test = new String[3];
-			test[0] = "e";
-			test[1] = "d";
-			test[2] = "g";
+			actionListener.setupRecommendationEngine(users);
 			
-			populateUI(test);
 		});
 		
 		HorizontalLayout firstQuery = new HorizontalLayout();
