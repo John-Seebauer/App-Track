@@ -3,10 +3,12 @@ package edu.illinois.web;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import edu.illinois.logic.SingleRecommendView;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
 
@@ -31,6 +33,8 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 	private void setupView() {
 		
 		 baseContainer = new VerticalLayout();
+		baseContainer.setSizeFull();
+		baseContainer.setSpacing(true);
 		
 		Button getRecsButton = new Button("Recommend something for me!");
 		getRecsButton.addClickListener(clickEvent -> {
@@ -47,6 +51,7 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 		
 		baseContainer.addComponent(getRecsButton);
 		baseContainer.addComponent(databaseGrid);
+		baseContainer.setExpandRatio(databaseGrid, 1.0f);
 		
 		setSpacing(true);
 		setMargin(true);

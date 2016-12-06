@@ -50,7 +50,6 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		this.ui = ui;
 		setSizeFull();
 		setSpacing(true);
-		setMargin(true);
 		setupView();
 	}
 	
@@ -93,6 +92,7 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 				actionListener.initRatingWindow(databaseEntry);
 			}
 		});
+		search.setClickShortcut(Button.ClickShortcut.KeyCode.ENTER);
 		
 		top.setSpacing(true);
 		top.addComponent(queryBar);

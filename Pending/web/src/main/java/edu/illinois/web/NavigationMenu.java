@@ -2,6 +2,7 @@ package edu.illinois.web;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
@@ -43,10 +44,19 @@ public class NavigationMenu extends CssLayout {
 		buttonLayout.addComponent(welcome);
 		menuContainer.addComponent(buttonLayout);
 		
+		Button logout = new Button("Logout");
+		logout.setIcon(FontAwesome.CLOSE);
+		logout.addClickListener(listener -> {
+			getUI().getPage().reload();
+		});
+		logout.addStyleName(ValoTheme.MENU_ITEM);
+		logout.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+		
 		menuLayoutList = new CssLayout();
 		menuLayoutList.setPrimaryStyleName("valo-menuitems");
 		menuContainer.addComponent(menuLayoutList);
 		addComponent(menuContainer);
+		addComponent(logout);
 		
 		buttonNameRefs = new HashMap<>();
 	}

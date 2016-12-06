@@ -4,7 +4,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import edu.illinois.logic.GroupRecommendView;
@@ -13,7 +12,6 @@ import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -102,6 +100,7 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		buttonBar.addComponent(addUser);
 		buttonBar.addComponent(removeUser);
 		buttonBar.setSpacing(true);
+		buttonBar.setMargin(new MarginInfo(true, true, false, true));
 		
 		VerticalLayout top = new VerticalLayout();
 		top.setMargin(true);
@@ -125,8 +124,9 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		
 		vl = new VerticalLayout();
-		
-		
+		vl.setSizeFull();
+		vl.setMargin(true);
+		vl.setSpacing(true);
 		Button findMoviesForAllUsers = new Button("Find movies!");
 		
 		findMoviesForAllUsers.addClickListener(clickEvent -> {
@@ -149,12 +149,11 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		vl.addComponent(firstQuery);
 		vl.addComponent(databaseGrid);
-		
-
+		vl.setSizeFull();
+		vl.setExpandRatio(databaseGrid, 1.0f);
 		
 		VerticalLayout baseContainer = new VerticalLayout();
 		baseContainer.setSpacing(true);
-		baseContainer.setMargin(true);
 		baseContainer.setSizeFull();
 		
 		baseContainer.addComponent(vl);
