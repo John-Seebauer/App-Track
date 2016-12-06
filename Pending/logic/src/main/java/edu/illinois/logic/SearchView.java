@@ -1,6 +1,7 @@
 package edu.illinois.logic;
 
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.Image;
 import edu.illinois.util.DatabaseEntry;
 
 /**
@@ -14,7 +15,7 @@ public interface SearchView extends CommonView {
 	
 	void queryFailedCleanup();
 	
-	void displayRatingWindow(String name, String genre, String plot, Integer movie_id);
+	void displayRatingWindow(String name, String genre, String plot, Integer movie_id, Image image);
 	
 	interface ActionListener {
 		String getProperty(String name);

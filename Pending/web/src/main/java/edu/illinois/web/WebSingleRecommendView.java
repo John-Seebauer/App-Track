@@ -32,7 +32,11 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 	
 	private void setupView() {
 		
-		 baseContainer = new VerticalLayout();
+		baseContainer = new VerticalLayout();
+		baseContainer.setSizeFull();
+		baseContainer.setSpacing(true);
+		baseContainer.setSizeFull();
+		baseContainer.setSpacing(true);
 		baseContainer.setSizeFull();
 		baseContainer.setSpacing(true);
 		

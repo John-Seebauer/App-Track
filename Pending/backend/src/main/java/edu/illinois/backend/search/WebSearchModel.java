@@ -1,15 +1,20 @@
 package edu.illinois.backend.search;
 
+import com.vaadin.ui.Image;
 import edu.illinois.backend.WebCommonModel;
+import edu.illinois.backend.services.PosterFetchService;
 import edu.illinois.logic.SearchModel;
 import edu.illinois.util.DatabaseEntry;
 import edu.illinois.util.DatabaseTable;
 import edu.illinois.util.JDBCResult;
 
+import javax.imageio.ImageIO;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -81,5 +86,17 @@ public class WebSearchModel extends WebCommonModel implements SearchModel {
 	@Override
 	public void setActionListener(ActionListener actionListener) {
 		this.actionListener = actionListener;
+	}
+	
+	@Override
+	public Image getTitleImage(String movieName, Integer year) {
+		PosterFetchService posterFetchService = new PosterFetchService();
+		String urlString = posterFetchService.getURLString(movieName, year);
+		try {
+			return posterFetchService.getImage(ImageIO.read(new URL(urlString)));
+		} catch (Exception ex) {
+			logger.log(Level.INFO, "Couldn't get title image", ex);
+		}
+		return null;
 	}
 }

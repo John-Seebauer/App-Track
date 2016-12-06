@@ -147,7 +147,9 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 		String genre = genres.isEmpty() ? "Unknown" : genres.iterator().next();
 		String plot = plots.isEmpty() ? "Unknown plot" : plots.iterator().next();
 		view.displayRatingWindow(selected.getAttribute("title", String.class), genre, plot,
-				selected.getAttribute("movie_id", Integer.class));
+				selected.getAttribute("movie_id", Integer.class),
+				model.getTitleImage(selected.getAttribute("title", String.class),
+						selected.getAttribute("year", Integer.class)));
 	}
 	
 	@Override

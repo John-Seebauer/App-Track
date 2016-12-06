@@ -167,8 +167,16 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	}
 	
 	@Override
-	public void displayRatingWindow(String name, String genre, String plot, Integer movie_id) {
+	public void displayRatingWindow(String name, String genre, String plot, Integer movie_id, Image image) {
 		//Rating window
+		HorizontalLayout pictureAndBase = new HorizontalLayout();
+		pictureAndBase.setSizeFull();
+		if (image != null) {
+			image.setHeight(2.25f, Unit.INCH);
+			image.setWidth(1.5f, Unit.INCH);
+			pictureAndBase.addComponent(image);
+		}
+		
 		VerticalLayout ratingWindowLayout = new VerticalLayout();
 		ratingWindowLayout.setSizeFull();
 		
@@ -192,10 +200,12 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		
 		ratingWindowLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		
-		new DialogBuilder(ui, ratingWindowLayout, DialogType.INFO)
+		pictureAndBase.addComponent(ratingWindowLayout);
+		pictureAndBase.setExpandRatio(ratingWindowLayout, 1.0f);
+		new DialogBuilder(ui, pictureAndBase, DialogType.INFO)
 				.title("Rating for: " + name)
-				.height(50f, Unit.PERCENTAGE)
-				.width(4.0f, Unit.INCH)
+				.height(3.75f, Unit.INCH)
+				.width(6.0f, Unit.INCH)
 				.showCancel()
 				.resultConsumer(yesNoCancelResult -> {
 					if (YesNoCancelResult.YES.equals(yesNoCancelResult)) {

@@ -1,5 +1,7 @@
 package edu.illinois.logic;
 
+import com.vaadin.ui.Image;
+
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.WatchService;
@@ -28,7 +30,10 @@ public class TestPresenter<V extends TestView, M extends TestModel> extends Comm
 			logger.log(Level.FINE, "Could not initialize WatchService.", e);
 		}
 		
-		
-		
+	}
+	
+	@Override
+	public Image getImage(String movie, Integer year) {
+		return null;
 	}
 }

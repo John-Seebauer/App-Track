@@ -1,5 +1,6 @@
 package edu.illinois.logic;
 
+import com.vaadin.ui.Image;
 import edu.illinois.util.DatabaseEntry;
 import edu.illinois.util.JDBCResult;
 
@@ -21,6 +22,8 @@ public interface SearchModel extends CommonModel {
 	void getGenreAndPlotForMovie(String genreQuery, String plotQuery, DatabaseEntry selected);
 	
 	void setActionListener(ActionListener actionListener);
+	
+	Image getTitleImage(String movieName, Integer year);
 	
 	interface ActionListener {
 		void formatMovieContainer(final JDBCResult result);

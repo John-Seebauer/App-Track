@@ -60,9 +60,20 @@ public class WebTestView extends AbstractWebView implements TestView {
 		});
 		addComponent(throwException);
 		
-		TextArea log = new TextArea();
-		log.setWordwrap(false);
+		TextField field = new TextField("Get image for movie");
+		TextField field1 = new TextField("Year");
 		
+		Button go = new Button("Go");
+		go.addClickListener(listener -> {
+			Image image = actionListener.getImage(field.getValue(), Integer.parseInt(field1.getValue()));
+			ui.access(() -> {
+				new DialogBuilder(ui, image, DialogType.INFO)
+						.display();
+			});
+		});
+		addComponent(field);
+		addComponent(field1);
+		addComponent(go);
 	}
 	
 	@Override
