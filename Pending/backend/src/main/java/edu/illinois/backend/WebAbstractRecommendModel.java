@@ -44,6 +44,8 @@ public abstract class WebAbstractRecommendModel extends WebCommonModel implement
 					idMovies.add(new Pair<Integer,String>(movie_id,title));
 				}
 				
+				
+				
 				ArrayList<String> ret = new ArrayList<String>();
 				for(Integer currMovieId : movieID){
 					for(int j = 0; j < idMovies.size(); j++){

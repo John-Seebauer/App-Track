@@ -1,5 +1,6 @@
 package edu.illinois.web;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
@@ -65,18 +66,18 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 	
 	public void populateUI(String[] movies){
 		
-		baseContainer.removeComponent(databaseGrid);
-		databaseGrid = new Grid();
-		databaseGrid.setSizeFull();
-		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-		databaseGrid.addColumn("movie name", String.class);
-		baseContainer.addComponent(databaseGrid);
-		removeComponent(baseContainer);
-		addComponent(baseContainer);
-		
-		for(String movieStr : movies){
-			databaseGrid.addRow(movieStr);
+		IndexedContainer container = new IndexedContainer();
+		container.addContainerProperty("movie", String.class, "");
+		for(String movie : movies){
+			Object itemID = container.addItem();
+			
+			Item item = container.getItem(itemID);
+			
+			item.getItemProperty("movie").setValue(movie);
 		}
+		
+		databaseGrid.removeAllColumns();
+		databaseGrid.setContainerDataSource(container);
 
 	}
 	
