@@ -130,7 +130,6 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		findMoviesForAllUsers.addClickListener(clickEvent -> {
 			
-			
 			actionListener.setupRecommendationEngine(users);
 		
 		});
@@ -179,9 +178,12 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 //		databaseGrid.addColumn("movie name", String.class);
 //		vl.addComponent(databaseGrid);
 		
+		
+		
 		for(String movieStr : movies){
 			databaseGrid.addRow(movieStr);
 		}
+		
 		
 	}
 	

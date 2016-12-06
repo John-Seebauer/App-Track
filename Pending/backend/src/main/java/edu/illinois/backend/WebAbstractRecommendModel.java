@@ -47,7 +47,7 @@ public abstract class WebAbstractRecommendModel extends WebCommonModel implement
 				ArrayList<String> ret = new ArrayList<String>();
 				for(Integer currMovieId : movieID){
 					for(int j = 0; j < idMovies.size(); j++){
-						if(idMovies.get(j).getOne() == currMovieId){
+						if(idMovies.get(j).getOne().equals(currMovieId)){
 							ret.add(idMovies.get(j).getTwo());
 							break;
 						}
