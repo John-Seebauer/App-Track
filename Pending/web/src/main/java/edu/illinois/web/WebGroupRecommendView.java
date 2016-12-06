@@ -1,5 +1,6 @@
 package edu.illinois.web;
 
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable;
@@ -10,6 +11,7 @@ import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +27,8 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 	private Grid databaseGrid;
 	
 	private VerticalLayout vl;
+	
+	private ArrayList<String> users = new ArrayList<String>();
 	
 	private GroupRecommendView.ActionListener actionListener;
 	private Collection<String> selectedUsers = new CopyOnWriteArraySet<>();
@@ -76,6 +80,8 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 					.resultConsumer(consumer -> {
 						if (YesNoCancelResult.YES.equals(consumer)) {
 							usersList.addItem(usernameField.getValue());
+							
+							users.add(usernameField.getValue());
 						}
 					})
 					.display();
@@ -86,6 +92,8 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		removeUser.addClickListener(clicked -> {
 			for (String user : Collections.unmodifiableCollection(selectedUsers)) {
 				usersList.removeItem(user);
+				
+				users.remove(user);
 			}
 		});
 		
@@ -122,8 +130,8 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		findMoviesForAllUsers.addClickListener(clickEvent -> {
 			
-
-			//actionListener.setupRecommendationEngine(Arrays.asList(users));
+			
+			actionListener.setupRecommendationEngine(users);
 		
 		});
 		
@@ -134,6 +142,8 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		databaseGrid = new Grid();
 		databaseGrid.setSizeFull();
+		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+		databaseGrid.addColumn("movie name", String.class);
 		
 		vl.addComponent(firstQuery);
 		vl.addComponent(databaseGrid);
@@ -162,12 +172,12 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 	
 	public void populateUI(String[] movies){
 		
-		vl.removeComponent(databaseGrid);
-		databaseGrid = new Grid();
-		databaseGrid.setSizeFull();
-		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-		databaseGrid.addColumn("movie name", String.class);
-		vl.addComponent(databaseGrid);
+//		vl.removeComponent(databaseGrid);
+//		databaseGrid = new Grid();
+//		databaseGrid.setSizeFull();
+//		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+//		databaseGrid.addColumn("movie name", String.class);
+//		vl.addComponent(databaseGrid);
 		
 		for(String movieStr : movies){
 			databaseGrid.addRow(movieStr);

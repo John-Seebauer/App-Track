@@ -5,6 +5,7 @@ import edu.illinois.util.JDBCResult;
 import edu.illinois.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -45,10 +46,28 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 	public void createSingleRecommendationEngine(HashMap<String, List<Pair<Integer, Float>>> dataset) {
 		engine = new SingleRecommender(dataset,  new ArrayList(dataset.keySet()) );
 		logger.info( model.getUser()+" asked for a recomendation");
-		List<Pair<Integer,Float>> recs = engine.getRecommendations(model.getUser());
-		if(recs.size()==0) {
-			view.showMessage("Cloud Atlas is quite enjoyable");
+		
+		//ints = movie ids, float = probability youll like it
+		List<Pair<Integer,Float>> recs = engine.getRecommendations(model.getUser());//currently recs is null
+		
+		
+		
+		if(recs==null || recs.size()==0) {
+			view.showMessage("sorry, no movies could be recommended");
 		} else {
+			
+			ArrayList<Integer> movieID = new ArrayList<Integer>();
+			
+			for(Pair<Integer,Float> rec : recs){
+				movieID.add(rec.getOne());
+			}
+			
+			model.convertIDtoTitle(movieID,this::populateUIPass);
+			
+			
+			
+			//view.populateUI(temp);
+
 			/*
 			String displayString = recs.stream()
 					.map(p -> p.getOne().toString())
@@ -56,5 +75,17 @@ public class SingleRecommendPresenter<V extends SingleRecommendView, M extends S
 			view.showMessage(displayString);
 			*/
 		}
+	}
+	
+	public void populateUIPass(List<String> movies){
+		
+		String[] moviesArr = new String[movies.size()];
+		int i = 0;
+		for(String movie : movies){
+			moviesArr[i] = movie;
+			i++;
+		}
+		
+		view.populateUI(moviesArr);
 	}
 }

@@ -40,10 +40,17 @@ public class GroupRecommendPresenter<V extends GroupRecommendView, M extends Gro
 
 	@Override
 	public void getGroupRecomendation(HashMap<String, List<Pair<Integer, Float>>> dataset) {
+		
 		singleRecEngine = new SingleRecommender(dataset,  new ArrayList(dataset.keySet()) );
 		GroupRecomender groupRecEngine = new GroupRecomender(singleRecEngine, users);
 		Integer movieRec = groupRecEngine.getGroupRecomendations();
-		view.showMessage(convertIDtoTitle(movieRec));
+		//view.showMessage(convertIDtoTitle(movieRec));
+		
+		String movieRecStr = convertIDtoTitle(movieRec);
+		String[] movieRecStrs = new String[1];
+		movieRecStrs[0] = movieRecStr;
+		
+		view.populateUI(movieRecStrs);
 
 
 	}

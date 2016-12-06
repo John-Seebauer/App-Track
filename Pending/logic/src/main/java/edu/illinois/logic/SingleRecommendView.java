@@ -6,6 +6,9 @@ package edu.illinois.logic;
 public interface SingleRecommendView extends AbstractRecommendView {
 
 	void setActionListener(ActionListener actionListener);
+	
+	void populateUI(String[] movies);
+	
 	interface ActionListener {
 		void setupRecommendationEngine();
 		void getRecommendation();

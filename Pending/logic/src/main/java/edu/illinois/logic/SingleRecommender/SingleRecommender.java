@@ -97,6 +97,9 @@ public class SingleRecommender {
 	 * @return a list of (movieID, probability of enjoyment)
 	 */
 	public List<Pair<Integer, Float>> getRecommendations(String user) {
+		
+		
+		
 		if (!dataset.containsKey(user)) {
 
 			//throw (new Exception("User does not exist"));
@@ -151,6 +154,8 @@ public class SingleRecommender {
 					}
 				})
 				.collect(Collectors.toList());
+		
+		
 		return weightedRecs;
 	}
 }

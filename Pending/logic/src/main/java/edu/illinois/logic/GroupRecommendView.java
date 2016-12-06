@@ -7,6 +7,10 @@ import java.util.List;
  */
 public interface GroupRecommendView extends AbstractRecommendView {
 	void setActionListener(ActionListener actionListener);
+	
+	void populateUI(String[] movies);
+	
+	
 	interface ActionListener {
 		void setupRecommendationEngine(List<String> users);
 	}

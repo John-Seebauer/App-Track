@@ -54,6 +54,8 @@ public abstract class WebAbstractRecommendModel extends WebCommonModel implement
 					}
 				}
 				
+				
+				
 				resultConsumer.accept(ret);
 			}
 			
