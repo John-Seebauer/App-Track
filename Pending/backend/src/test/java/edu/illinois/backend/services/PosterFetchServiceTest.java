@@ -16,7 +16,7 @@ public class PosterFetchServiceTest {
 	
 	@Test
 	public void getURLString() throws Exception {
-		System.out.println(service.getURLString(3332844));
+		//System.out.println(service.getURLString(3332844));
 	}
 	
 }
