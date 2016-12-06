@@ -4,12 +4,8 @@ import edu.illinois.logic.AbstractRecommendModel;
 import edu.illinois.util.DatabaseEntry;
 import edu.illinois.util.DatabaseTable;
 import edu.illinois.util.JDBCResult;
-import edu.illinois.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -36,27 +32,18 @@ public abstract class WebAbstractRecommendModel extends WebCommonModel implement
 			if (result.getResult().isPresent()) {
 				DatabaseTable databaseTable = result.getResult().get();//ids, movienames
 				
-				ArrayList<Pair<Integer,String>> idMovies = new ArrayList<Pair<Integer,String>>();
+				HashMap<Integer, String> idMovies = new HashMap<>();
 				
 				for(DatabaseEntry entry : databaseTable.getRows()){
 					Integer movie_id = entry.getAttribute("movie_id",Integer.class);
 					String title = entry.getAttribute("title",String.class);
-					idMovies.add(new Pair<Integer,String>(movie_id,title));
+					idMovies.put(movie_id, title);
 				}
 				
-				
-				
-				ArrayList<String> ret = new ArrayList<String>();
+				ArrayList<String> ret = new ArrayList<>();
 				for(Integer currMovieId : movieID){
-					for(int j = 0; j < idMovies.size(); j++){
-						if(idMovies.get(j).getOne().equals(currMovieId)){
-							ret.add(idMovies.get(j).getTwo());
-							break;
-						}
-					}
+					ret.add(idMovies.get(currMovieId));
 				}
-				
-				
 				
 				resultConsumer.accept(ret);
 			}
