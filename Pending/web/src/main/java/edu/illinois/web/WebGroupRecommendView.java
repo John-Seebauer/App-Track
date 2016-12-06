@@ -131,21 +131,17 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 		
 		findMoviesForAllUsers.addClickListener(clickEvent -> {
 			
-//			actionListener.setupRecommendationEngine(users);
-		
-			String[] test = new String[3];
-			test[0] = "e";
-			test[1] = "d";
-			test[2] = "g";
+			if(users.size()==0)return;
 			
-			populateUI(test);
+			actionListener.setupRecommendationEngine(users);
+			
 		});
 		
 		HorizontalLayout firstQuery = new HorizontalLayout();
 		firstQuery.setSpacing(true);
 		firstQuery.addComponent(findMoviesForAllUsers);
 		firstQuery.setExpandRatio(findMoviesForAllUsers, 1.0f);
-		
+		    
 		databaseGrid = new Grid();
 		databaseGrid.setSizeFull();
 		databaseGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -188,8 +184,10 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 			item.getItemProperty("movie").setValue(movie);
 		}
 		
-		databaseGrid.removeAllColumns();
-		databaseGrid.setContainerDataSource(container);
+		ui.access( () -> {
+			databaseGrid.removeAllColumns();
+			databaseGrid.setContainerDataSource(container);
+		});
 		
 	}
 	

@@ -5,9 +5,7 @@ import edu.illinois.util.JDBCResult;
 import edu.illinois.util.Pair;
 import edu.illinois.logic.SingleRecommender.SingleRecommender;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -46,17 +44,26 @@ public class GroupRecommendPresenter<V extends GroupRecommendView, M extends Gro
 		Integer movieRec = groupRecEngine.getGroupRecomendations();
 		//view.showMessage(convertIDtoTitle(movieRec));
 		
-		String movieRecStr = convertIDtoTitle(movieRec);
-		String[] movieRecStrs = new String[1];
-		movieRecStrs[0] = movieRecStr;
+		model.convertIDtoTitle(Collections.singleton(movieRec),this::populateUIPass);
 		
-		view.populateUI(movieRecStrs);
+//		String movieRecStr = convertIDtoTitle(movieRec);
+//		String[] movieRecStrs = new String[1];
+//		movieRecStrs[0] = movieRecStr;
+//
+//		view.populateUI(movieRecStrs);
 
 
 	}
-
-	private String convertIDtoTitle(Integer movieID) {
-		return movieID.toString();
+	
+	public void populateUIPass(Collection<String> movies){
+		String[] moviesArr = new String[movies.size()];
+		int i = 0;
+		for(String movie : movies){
+			moviesArr[i] = movie;
+			i++;
+		}
+		
+		view.populateUI(moviesArr);
 	}
 
 	@Override
