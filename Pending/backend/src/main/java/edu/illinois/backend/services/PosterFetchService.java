@@ -87,7 +87,13 @@ public class PosterFetchService {
 			}
 		}
 		
-		public String getPosterURL() {
+		public String getPosterURL(String title, Integer year) {
+			String url = "http://www.omdbapi.com/?t=";
+			String[] splitTitle = title.split(" ");
+			
+			if (splitTitle.length > 1) {
+				//concatenate with plus signs
+			}
 			return posterURL;
 		}
 	}
