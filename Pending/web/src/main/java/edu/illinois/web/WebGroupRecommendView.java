@@ -188,8 +188,10 @@ public class WebGroupRecommendView extends AbstractWebView implements GroupRecom
 			item.getItemProperty("movie").setValue(movie);
 		}
 		
-		databaseGrid.removeAllColumns();
-		databaseGrid.setContainerDataSource(container);
+		ui.access( () -> {
+			databaseGrid.removeAllColumns();
+			databaseGrid.setContainerDataSource(container);
+		});
 		
 	}
 	

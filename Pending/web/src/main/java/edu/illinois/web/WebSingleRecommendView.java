@@ -66,6 +66,8 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 	
 	public void populateUI(String[] movies){
 		
+		
+		
 		IndexedContainer container = new IndexedContainer();
 		container.addContainerProperty("movie", String.class, "");
 		for(String movie : movies){
@@ -76,8 +78,12 @@ public class WebSingleRecommendView extends AbstractWebView implements SingleRec
 			item.getItemProperty("movie").setValue(movie);
 		}
 		
-		databaseGrid.removeAllColumns();
-		databaseGrid.setContainerDataSource(container);
+		ui.access( () -> {
+			databaseGrid.removeAllColumns();
+			databaseGrid.setContainerDataSource(container);
+		});
+		
+
 
 	}
 	
