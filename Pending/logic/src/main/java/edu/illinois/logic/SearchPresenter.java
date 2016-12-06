@@ -1,7 +1,8 @@
 package edu.illinois.logic;
 
-import edu.illinois.util.DatabaseEntry;
-import edu.illinois.util.JDBCResult;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
+import edu.illinois.util.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -58,9 +59,49 @@ public class SearchPresenter<V extends SearchView, M extends SearchModel> extend
 	}
 	
 	@Override
-	public void notifySELECTresponse(JDBCResult result) {
+	public void formatMovieContainer(JDBCResult result) {
 		if (result.getResult().isPresent()) {
-			view.notifySELECTresponse(result.formatToContainer());
+			DatabaseTable unformatted = result.getResult().get();
+			DatabaseRequestFormat requestFormat = new DatabaseRequestFormat(unformatted.getDatabase());
+			requestFormat.addAttribute("movie_id", Integer.class);
+			requestFormat.addAttribute("title", String.class);
+			requestFormat.addAttribute("year", Integer.class);
+			
+			DatabaseTable formatted = new DatabaseTable(unformatted.getDatabase(), requestFormat);
+			for (DatabaseEntry entry : unformatted.getRows()) {
+				DatabaseEntry formattedEntry = new DatabaseEntry(entry.getDatabase());
+				formattedEntry.addAttribute("movie_id", Integer.class,
+						entry.getAttribute("movie_id", Integer.class));
+				formattedEntry.addAttribute("title", String.class,
+						entry.getAttribute("title", String.class));
+				formattedEntry.addAttribute("year", Integer.class,
+						entry.getAttribute("production_year", Integer.class));
+				formatted.addRow(formattedEntry);
+			}
+			
+			IndexedContainer container = new IndexedContainer();
+			
+			for (Pair<String, Class<?>> entry : formatted.getColumns()) {
+				container.addContainerProperty(entry.getOne(), entry.getTwo(), null);
+			}
+			
+			for (DatabaseEntry row : formatted.getRows()) {
+				//Looks weird, but it's in the docs
+				Object itemID = container.addItem();
+				Item item = container.getItem(itemID);
+				for (Pair<String, Class<?>> entry : formatted.getColumns()) {
+					item.getItemProperty(entry.getOne()).setValue(row.getAttribute(entry.getOne(), entry.getTwo()));
+				}
+			}
+			
+			view.displaySearchResponse(container);
+		}
+	}
+	
+	@Override
+	public void formatSearchResult(JDBCResult result) {
+		if (result.getResult().isPresent()) {
+			view.displaySearchResponse(result.formatToContainer());
 		}
 	}
 	

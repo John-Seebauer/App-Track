@@ -4,6 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
+import com.vaadin.ui.renderers.NumberRenderer;
 import edu.illinois.logic.SearchView;
 import edu.illinois.util.DatabaseEntry;
 import edu.illinois.web.AbstractWebView;
@@ -11,8 +12,8 @@ import edu.illinois.web.util.DialogBuilder;
 import edu.illinois.web.util.DialogType;
 import edu.illinois.web.util.YesNoCancelResult;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.logging.Logger;
 
 /**
@@ -34,8 +35,8 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 	}
 	
 	@Override
-	public void notifySELECTresponse(IndexedContainer container) {
-		changeContainerWithHiddenId(container, Collections.singletonList("movie_id"));
+	public void displaySearchResponse(IndexedContainer container) {
+		changeSearchContainer(container);
 		progressBar.setVisible(false);
 	}
 	
@@ -141,15 +142,20 @@ public class WebSearchView extends AbstractWebView implements SearchView {
 		}
 	}
 	
-	private void changeContainerWithHiddenId(IndexedContainer container, Collection<String> hiddenTitles) {
+	private void changeSearchContainer(IndexedContainer container) {
 		if (container != null) {
+			NumberFormat yearFormat = new DecimalFormat("####");
+			NumberRenderer yearRenderer = new NumberRenderer(yearFormat);
+			
 			ui.access( () -> {
 				databaseGrid.removeAllColumns();
 				databaseGrid.setContainerDataSource(container);
 				for (Grid.Column column : databaseGrid.getColumns()) {
-					if(hiddenTitles.contains(column.getPropertyId())) {
+					if ("movie_id".equals(column.getPropertyId())) {
 						column.setHidden(true);
 						column.setHidable(false);
+					} else if ("year".equals(column.getPropertyId())) {
+						column.setRenderer(yearRenderer);
 					}
 				}
 			});

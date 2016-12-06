@@ -14,7 +14,7 @@ public interface SearchModel extends CommonModel {
 	
 	void saveRating(String query, Object additionalArgs);
 	
-	void notifySELECTresponse(final JDBCResult result);
+	void formatSearchResult(final JDBCResult result);
 	
 	void saveRatingSuccess(final JDBCResult result);
 	
@@ -23,7 +23,9 @@ public interface SearchModel extends CommonModel {
 	void setActionListener(ActionListener actionListener);
 	
 	interface ActionListener {
-		void notifySELECTresponse(final JDBCResult result);
+		void formatMovieContainer(final JDBCResult result);
+		
+		void formatSearchResult(final JDBCResult result);
 		
 		void saveRatingSuccess(final JDBCResult result);
 		

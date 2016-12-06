@@ -24,7 +24,7 @@ public class WebSearchModel extends WebCommonModel implements SearchModel {
 	}
 	
 	public void runSELECTquery(String query) {
-		storageService.runSELECTquery(query, this::notifySELECTresponse, actionListener::saveRatingFailure);
+		storageService.runSELECTquery(query, this::formatSearchResult, actionListener::saveRatingFailure);
 	}
 	
 	@Override
@@ -33,8 +33,8 @@ public class WebSearchModel extends WebCommonModel implements SearchModel {
 	}
 	
 	@Override
-	public void notifySELECTresponse(final JDBCResult result) {
-		actionListener.notifySELECTresponse(result);
+	public void formatSearchResult(final JDBCResult result) {
+		actionListener.formatMovieContainer(result);
 	}
 	
 	@Override

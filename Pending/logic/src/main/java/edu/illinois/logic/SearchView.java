@@ -10,7 +10,7 @@ public interface SearchView extends CommonView {
 	
 	void setActionListener(SearchView.ActionListener actionListener);
 	
-	void notifySELECTresponse(IndexedContainer container);
+	void displaySearchResponse(IndexedContainer container);
 	
 	void queryFailedCleanup();
 	
