@@ -5,6 +5,7 @@ import edu.illinois.util.*;
 
 import java.sql.*;
 import java.time.Instant;
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,8 +60,7 @@ public class StorageServiceBackgroundThread implements Runnable {
 	private void init() throws SQLException {
 		logger.info("Init StorageService background thread.");
 		todoTasks = new ArrayBlockingQueue<>(50);
-		connect = DriverManager.getConnection(path + "/" + defaultDatabase, defaultUser, defaultPassword);
-		statement = connect.createStatement();
+		renewConnection();
 	}
 	
 	public void addTask(JDBCTask task) throws InterruptedException {
@@ -136,8 +136,8 @@ public class StorageServiceBackgroundThread implements Runnable {
 	}
 	
 	private DatabaseTable runSELECTquery(String query, String database) throws SQLException {
-		if (statement.isClosed()) {
-			statement = connect.createStatement();
+		if (connect.isClosed() || statement.isClosed()) {
+			renewConnection();
 		}
 		ResultSet results = statement.executeQuery(query);
 		ResultSetMetaData metaData = results.getMetaData();
@@ -198,14 +198,24 @@ public class StorageServiceBackgroundThread implements Runnable {
 	}
 	
 	private void runUPDATEquery(String query, boolean large) throws SQLException {
-		if (statement.isClosed()) {
-			statement = connect.createStatement();
+		if (connect.isClosed() || statement.isClosed()) {
+			renewConnection();
 		}
 		if (large) {
 			statement.executeLargeUpdate(query);
 		} else {
 			statement.executeUpdate(query);
 		}
+	}
+	
+	private void renewConnection() throws SQLException {
+		Properties properties = new Properties();
+		properties.setProperty("user", defaultUser);
+		properties.setProperty("password", defaultPassword);
+		properties.setProperty("Keepalive", "10");
+		connect = DriverManager.getConnection(path + "/" + defaultDatabase, properties);
+		
+		statement = connect.createStatement();
 	}
 }
 
