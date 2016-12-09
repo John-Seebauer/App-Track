@@ -136,83 +136,93 @@ public class StorageServiceBackgroundThread implements Runnable {
 	}
 	
 	private DatabaseTable runSELECTquery(String query, String database) throws SQLException {
-		if (connect.isClosed() || statement.isClosed()) {
-			renewConnection();
-		}
-		ResultSet results = statement.executeQuery(query);
-		ResultSetMetaData metaData = results.getMetaData();
-		
-		DatabaseRequestFormat format = new DatabaseRequestFormat(database);
-		int columnCount = metaData.getColumnCount();
-		for (int i = 1; i <= columnCount; i++) {
-			String columnName = metaData.getColumnName(i);
-			switch (metaData.getColumnType(i)) {
-				case Types.CHAR:
-				case Types.VARCHAR:
-					format.addAttribute(columnName, String.class);
-					break;
-				case Types.INTEGER:
-					format.addAttribute(columnName, Integer.class);
-					break;
-				case Types.DATE:
-					format.addAttribute(columnName, Date.class);
-					break;
-				case Types.FLOAT:
-					format.addAttribute(columnName, Float.class);
-					break;
-				case -1:
-					//For TEXT data type
-					if(metaData.getColumnTypeName(i).equals("VARCHAR")) {
-						format.addAttribute(columnName, String.class);
-						break;
-					}
+		boolean tryAgain;
+		DatabaseTable decodedQuery = null;
+		do {
+			tryAgain = false;
+			try {
+				ResultSet results = statement.executeQuery(query);
+				ResultSetMetaData metaData = results.getMetaData();
+				
+				DatabaseRequestFormat format = new DatabaseRequestFormat(database);
+				int columnCount = metaData.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					String columnName = metaData.getColumnName(i);
+					switch (metaData.getColumnType(i)) {
+						case Types.CHAR:
+						case Types.VARCHAR:
+							format.addAttribute(columnName, String.class);
+							break;
+						case Types.INTEGER:
+							format.addAttribute(columnName, Integer.class);
+							break;
+						case Types.DATE:
+							format.addAttribute(columnName, Date.class);
+							break;
+						case Types.FLOAT:
+							format.addAttribute(columnName, Float.class);
+							break;
+						case -1:
+							//For TEXT data type
+							if (metaData.getColumnTypeName(i).equals("VARCHAR")) {
+								format.addAttribute(columnName, String.class);
+								break;
+							}
 						
-				default:
-					throw new UnsupportedOperationException("Unknown type:\t" + metaData.getColumnType(i));
-			}
-			
-		}
-		
-		DatabaseTable decodedQuery = new DatabaseTable(database, format);
-		
-		while (results.next()) {
-			DatabaseEntry dbEntry = new DatabaseEntry(database);
-			for (Pair<String, Class<?>> attribute : format.getAttributeList()) {
-				String name = attribute.getOne();
-				Class<?> type = attribute.getTwo();
-				if (type.equals(String.class)) {
-					dbEntry.addAttribute(name, type, results.getString(name));
-				} else if (type.equals(Integer.class)) {
-					dbEntry.addAttribute(name, type, results.getInt(name));
-				} else if (type.equals(Instant.class)) {
-					dbEntry.addAttribute(name, type, results.getDate(name));
-				} else if (type.equals(Float.class)) {
-					dbEntry.addAttribute(name, type, results.getFloat(name));
-				} else {
-					throw new UnsupportedOperationException("Unknown type:\t" + type);
+						default:
+							throw new UnsupportedOperationException("Unknown type:\t" + metaData.getColumnType(i));
+					}
+					
 				}
+				
+				decodedQuery = new DatabaseTable(database, format);
+				
+				while (results.next()) {
+					DatabaseEntry dbEntry = new DatabaseEntry(database);
+					for (Pair<String, Class<?>> attribute : format.getAttributeList()) {
+						String name = attribute.getOne();
+						Class<?> type = attribute.getTwo();
+						if (type.equals(String.class)) {
+							dbEntry.addAttribute(name, type, results.getString(name));
+						} else if (type.equals(Integer.class)) {
+							dbEntry.addAttribute(name, type, results.getInt(name));
+						} else if (type.equals(Instant.class)) {
+							dbEntry.addAttribute(name, type, results.getDate(name));
+						} else if (type.equals(Float.class)) {
+							dbEntry.addAttribute(name, type, results.getFloat(name));
+						} else {
+							throw new UnsupportedOperationException("Unknown type:\t" + type);
+						}
+					}
+					decodedQuery.addRow(dbEntry);
+				}
+			} catch (SQLTimeoutException ex) {
+				tryAgain = true;
 			}
-			decodedQuery.addRow(dbEntry);
-		}
+		} while (tryAgain);
 		return decodedQuery;
 	}
 	
 	private void runUPDATEquery(String query, boolean large) throws SQLException {
-		if (connect.isClosed() || statement.isClosed()) {
-			renewConnection();
-		}
-		if (large) {
-			statement.executeLargeUpdate(query);
-		} else {
-			statement.executeUpdate(query);
-		}
+		boolean tryAgain;
+		do {
+			tryAgain = false;
+			try {
+				if (large) {
+					statement.executeLargeUpdate(query);
+				} else {
+					statement.executeUpdate(query);
+				}
+			} catch (SQLTimeoutException ex) {
+				tryAgain = true;
+			}
+		} while (tryAgain);
 	}
 	
 	private void renewConnection() throws SQLException {
 		Properties properties = new Properties();
 		properties.setProperty("user", defaultUser);
 		properties.setProperty("password", defaultPassword);
-		properties.setProperty("Keepalive", "10");
 		connect = DriverManager.getConnection(path + "/" + defaultDatabase, properties);
 		
 		statement = connect.createStatement();
