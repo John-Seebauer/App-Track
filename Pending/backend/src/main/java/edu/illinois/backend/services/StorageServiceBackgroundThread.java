@@ -138,6 +138,11 @@ public class StorageServiceBackgroundThread implements Runnable {
 	private DatabaseTable runSELECTquery(String query, String database) throws SQLException {
 		boolean tryAgain;
 		DatabaseTable decodedQuery = null;
+		
+		if (connect.isClosed() || statement.isClosed()) {
+			renewConnection();
+		}
+		
 		do {
 			tryAgain = false;
 			try {
@@ -205,6 +210,11 @@ public class StorageServiceBackgroundThread implements Runnable {
 	
 	private void runUPDATEquery(String query, boolean large) throws SQLException {
 		boolean tryAgain;
+		
+		if (connect.isClosed() || statement.isClosed()) {
+			renewConnection();
+		}
+		
 		do {
 			tryAgain = false;
 			try {
